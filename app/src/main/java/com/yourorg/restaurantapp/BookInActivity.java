@@ -68,7 +68,7 @@ public class BookInActivity extends AppCompatActivity {
                 partySize = Integer.parseInt(partySizeStr);
             } catch (NumberFormatException e) { /* Failsafe */ }
             
-            String dateTime = date + " " + time;
+            String dateTime = date + " at " + time;
             ReservationEntity newReservation = new ReservationEntity(name, partySize, dateTime);
             reservationViewModel.createReservationLocal(newReservation);
 
@@ -102,7 +102,7 @@ public class BookInActivity extends AppCompatActivity {
     }
 
     private void updateDateLabel() {
-        String myFormat = "dd/MM/yyyy"; 
+        String myFormat = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         dateEditText.setText(sdf.format(myCalendar.getTime()));
     }
