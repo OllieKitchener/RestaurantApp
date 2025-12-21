@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Restaurantapp"
+        tools:targetApi="31">
+        
+        <activity
+            android:name="com.yourorg.restaurantapp.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.yourorg.restaurantapp.GuestHomeActivity" />
+        <activity android:name="com.yourorg.restaurantapp.SettingsActivity" />
+        <activity android:name="com.yourorg.restaurantapp.BookInSummaryActivity" />
+        <activity android:name="com.yourorg.restaurantapp.NotificationsActivity" />
+        <activity android:name="com.yourorg.restaurantapp.ReservationsActivity" />
+        <activity android:name="com.yourorg.restaurantapp.BookInActivity" />
+        <activity android:name="com.yourorg.restaurantapp.ReservationDetailsActivity" />
+        <activity android:name="com.yourorg.restaurantapp.StaffLoginActivity" />
+        <activity android:name="com.yourorg.restaurantapp.StaffHomeActivity" />
+        <activity android:name="com.yourorg.restaurantapp.ui.staff.StaffManageMenuActivity" />
+
+        <!-- Restoring the declarations for the menu activities -->
+        <activity android:name="com.yourorg.restaurantapp.MenuCategoryActivity" />
+        <activity android:name="com.yourorg.restaurantapp.MenuDishesActivity" />
+        <activity android:name="com.yourorg.restaurantapp.DishDetailsActivity" />
+
+    </application>
+
+</manifest>

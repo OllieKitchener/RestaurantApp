@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#D84315</color> <!-- Deep Orange -->
+    <color name="primary_variant">#BF360C</color> <!-- Darker Orange -->
+    <color name="on_primary">#FFFFFF</color>
+
+    <color name="secondary">#FFC107</color> <!-- Amber/Gold -->
+    <color name="secondary_variant">#FFB300</color>
+    <color name="on_secondary">#000000</color>
+
+    <color name="background">#FAFAFA</color> <!-- Off-white background -->
+    <color name="surface">#FFFFFF</color>
+    
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Keeping old names for compatibility if referenced directly, but mapping to new -->
+    <color name="purple_200">@color/secondary</color>
+    <color name="purple_500">@color/primary</color>
+    <color name="purple_700">@color/primary_variant</color>
+    <color name="teal_200">@color/secondary</color>
+    <color name="teal_700">@color/secondary_variant</color>
+</resources>
