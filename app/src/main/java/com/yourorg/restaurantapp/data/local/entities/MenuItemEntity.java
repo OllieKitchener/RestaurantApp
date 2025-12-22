@@ -25,6 +25,7 @@ public class MenuItemEntity {
         this.available = available;
     }
 
+    // Restoring the missing toModel() helper method
     public MenuItem toModel() {
         return new MenuItem(id, name, description, price, category, available);
     }

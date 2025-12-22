@@ -15,7 +15,7 @@ import com.yourorg.restaurantapp.data.local.entities.ReservationEntity;
 import java.util.concurrent.Executors;
 
 // Restoring MenuItemEntity to the entities list and incrementing version
-@Database(entities = {MenuItemEntity.class, ReservationEntity.class}, version = 4, exportSchema = false)
+@Database(entities = {MenuItemEntity.class, ReservationEntity.class}, version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     // Restoring the abstract menuItemDao() method
     public abstract MenuItemDao menuItemDao();

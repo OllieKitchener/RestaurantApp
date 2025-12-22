@@ -12,13 +12,10 @@ import com.yourorg.restaurantapp.model.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-// This is the definitive, stable version of MenuViewModel.
-// It uses a standard for-loop to prevent crashes on older Android versions.
 public class MenuViewModel extends AndroidViewModel {
     private final RestaurantRepository repository;
     public final MutableLiveData<List<MenuItem>> menuLiveData = new MutableLiveData<>();
     public final MutableLiveData<List<String>> categoriesLiveData = new MutableLiveData<>();
-    public final MutableLiveData<String> error = new MutableLiveData<>();
 
     public MenuViewModel(@NonNull Application application) {
         super(application);
@@ -28,13 +25,9 @@ public class MenuViewModel extends AndroidViewModel {
     public void loadMenuFromDatabase() {
         repository.getAllMenuLocal(menuItemEntities -> {
             if (menuItemEntities != null) {
-                // Using a standard for-loop for maximum compatibility.
-                // This replaces the Java 8 stream() code that was causing the crash.
                 List<MenuItem> menuItems = new ArrayList<>();
                 for (MenuItemEntity entity : menuItemEntities) {
-                    if (entity != null) {
-                        menuItems.add(entity.toModel());
-                    }
+                    menuItems.add(new MenuItem(entity.id, entity.name, entity.description, entity.price, entity.category, entity.available));
                 }
                 menuLiveData.postValue(menuItems);
             }

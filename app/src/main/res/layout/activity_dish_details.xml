@@ -5,21 +5,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:gravity="center_horizontal"
     tools:context=".DishDetailsActivity">
-
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back" />
 
     <TextView
         android:id="@+id/dish_name_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:textSize="28sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="24dp"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        tools:text="Dish Name" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Back" />
 
 </LinearLayout>

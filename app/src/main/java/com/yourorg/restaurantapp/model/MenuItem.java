@@ -21,8 +21,10 @@ public class MenuItem {
     @SerializedName("available")
     public boolean available;
 
+    // No-argument constructor for deserialization
     public MenuItem() { }
 
+    // Full constructor for convenience
     public MenuItem(int id, String name, String description, double price, String category, boolean available) {
         this.id = id;
         this.name = name;

@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
 import com.google.android.material.button.MaterialButton;
 
+// Adding the missing import for the menu screen
+import com.yourorg.restaurantapp.MenuCategoryActivity;
+
 public class GuestHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
