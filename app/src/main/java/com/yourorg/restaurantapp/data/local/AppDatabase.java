@@ -10,7 +10,7 @@ import com.yourorg.restaurantapp.data.local.entities.ReservationEntity;
 import com.yourorg.restaurantapp.data.local.dao.MenuItemDao;
 import com.yourorg.restaurantapp.data.local.dao.ReservationDao;
 
-@Database(entities = {MenuItemEntity.class, ReservationEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {MenuItemEntity.class, ReservationEntity.class}, version = 6, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase INSTANCE;
 
@@ -23,6 +23,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "restaurant_db")
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

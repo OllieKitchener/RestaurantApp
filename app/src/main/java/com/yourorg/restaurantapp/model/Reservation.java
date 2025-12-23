@@ -9,30 +9,25 @@ public class Reservation {
     @SerializedName("name")
     public String name;
 
-    @SerializedName("phone")
-    public String phone;
+    // Removed phone and notes to match the simplified entity
 
     @SerializedName("partySize")
     public int partySize;
 
     @SerializedName("dateTime")
-    public String dateTime; // ISO 8601 string recommended
+    public String dateTime;
 
     @SerializedName("status")
-    public String status; // e.g., "pending", "confirmed", "cancelled"
-
-    @SerializedName("notes")
-    public String notes;
+    public String status;
 
     public Reservation() { }
 
-    public Reservation(int id, String name, String phone, int partySize, String dateTime, String status, String notes) {
+    // Updated constructor
+    public Reservation(int id, String name, int partySize, String dateTime, String status) {
         this.id = id;
         this.name = name;
-        this.phone = phone;
         this.partySize = partySize;
         this.dateTime = dateTime;
         this.status = status;
-        this.notes = notes;
     }
 }

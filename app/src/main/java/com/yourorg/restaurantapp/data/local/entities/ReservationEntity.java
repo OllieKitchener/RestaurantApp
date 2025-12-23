@@ -9,27 +9,11 @@ public class ReservationEntity {
     public int id;
 
     public String name;
-    public String phone;
     public int partySize;
     public String dateTime;
     public String status;
-    public String notes;
 
-    // No-argument constructor required by Room
-    public ReservationEntity() { }
-
-    // Full constructor for loading from the database
-    public ReservationEntity(int id, String name, String phone, int partySize, String dateTime, String status, String notes) {
-        this.id = id;
-        this.name = name;
-        this.phone = phone;
-        this.partySize = partySize;
-        this.dateTime = dateTime;
-        this.status = status;
-        this.notes = notes;
-    }
-
-    // Constructor for creating a new reservation from the BookInActivity screen
+    // A single constructor for creating a new reservation from the UI
     public ReservationEntity(String name, int partySize, String dateTime) {
         this.name = name;
         this.partySize = partySize;
@@ -37,7 +21,8 @@ public class ReservationEntity {
         this.status = "Booked"; // Default status
     }
 
+    // Corrected to call the constructor that ACTUALLY exists on the Reservation model
     public com.yourorg.restaurantapp.model.Reservation toModel() {
-        return new com.yourorg.restaurantapp.model.Reservation(id, name, phone, partySize, dateTime, status, notes);
+        return new com.yourorg.restaurantapp.model.Reservation(id, name, partySize, dateTime, status);
     }
 }
