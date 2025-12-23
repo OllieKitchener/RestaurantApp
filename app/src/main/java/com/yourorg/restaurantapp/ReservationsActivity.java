@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.content.Intent;
 
-// Correctly import the UI model, not the database entity
 import com.yourorg.restaurantapp.model.Reservation;
 import com.yourorg.restaurantapp.viewmodel.ReservationViewModel;
 
@@ -37,8 +36,6 @@ public class ReservationsActivity extends AppCompatActivity {
                 textView.setTextSize(18);
                 reservationsContainer.addView(textView);
             } else {
-                // The LiveData provides Reservation objects, not ReservationEntity objects.
-                // This loop now uses the correct type.
                 Collections.reverse(reservations);
                 for (Reservation reservation : reservations) {
                     String summary = "Name: " + reservation.name + "\n" +
@@ -53,37 +50,22 @@ public class ReservationsActivity extends AppCompatActivity {
             }
         });
 
-        // Corrected to call the method that fetches from the remote API as per the ViewModel design
         reservationViewModel.loadReservations();
 
-        // Initialize buttons from the layout
+        // --- Back Button Navigation ---
         Button backButton = findViewById(R.id.backButton);
         if (backButton != null) {
             backButton.setOnClickListener(v -> finish());
         }
 
+        // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
+        if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
+
         Button notificationsButton = findViewById(R.id.notificationsButton);
+        if(notificationsButton != null) notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
+
         Button settingsButton = findViewById(R.id.settingsButton);
-
-        if (homeButton != null) {
-            homeButton.setOnClickListener(v -> {
-                // This logic seems incorrect, there is no isStaffLoggedIn variable.
-                // For now, it will just go to the Guest Home.
-                startActivity(new Intent(this, GuestHomeActivity.class));
-            });
-        }
-
-        if (notificationsButton != null) {
-            notificationsButton.setOnClickListener(v -> {
-                startActivity(new Intent(this, com.yourorg.restaurantapp.NotificationsActivity.class));
-            });
-        }
-
-        if (settingsButton != null) {
-            settingsButton.setOnClickListener(v -> {
-                startActivity(new Intent(this, SettingsActivity.class));
-            });
-        }
+        if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 }
