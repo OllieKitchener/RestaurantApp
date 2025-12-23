@@ -75,20 +75,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Home"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_home"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
+            android:layout_width="68dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_notifications"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
@@ -97,9 +97,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Settings"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_settings"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

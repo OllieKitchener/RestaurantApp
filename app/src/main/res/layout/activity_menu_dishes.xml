@@ -49,8 +49,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
         android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
@@ -60,9 +60,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Home"
-            android:textSize="10sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_home"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
@@ -71,9 +71,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
-            android:textSize="10sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_notifications"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
@@ -82,9 +82,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Settings"
-            android:textSize="10sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_settings"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
     </LinearLayout>
 
 </RelativeLayout>
