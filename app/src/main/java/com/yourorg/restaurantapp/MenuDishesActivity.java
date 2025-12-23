@@ -80,6 +80,10 @@ public class MenuDishesActivity extends AppCompatActivity {
             for (MenuItem item : filteredDishes) {
                 Button dishButton = new Button(this);
                 dishButton.setText(item.name);
+                // Making the button bigger by increasing text size and adding padding
+                dishButton.setTextSize(18f);
+                dishButton.setPadding(0, 40, 0, 40);
+
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT

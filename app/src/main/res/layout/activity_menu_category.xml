@@ -31,7 +31,8 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_recommended"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="12dp">
             <TextView
@@ -45,7 +46,8 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_deals"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="12dp">
             <TextView
@@ -59,7 +61,8 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_meat"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="12dp">
             <TextView
@@ -73,7 +76,8 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_fish"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="12dp">
             <TextView
@@ -87,7 +91,8 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_vegetarian"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             app:cardCornerRadius="12dp">
             <TextView
                 android:layout_width="wrap_content"
@@ -103,8 +108,10 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
@@ -113,7 +120,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Home"
-            app:icon="@drawable/ic_home" />
+            android:textSize="14sp"
+            app:icon="@drawable/ic_home"
+            app:iconPadding="4dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
@@ -122,7 +131,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
-            app:icon="@drawable/ic_notifications" />
+            android:textSize="14sp"
+            app:icon="@drawable/ic_notifications"
+            app:iconPadding="4dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
@@ -131,7 +142,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Settings"
-            app:icon="@drawable/ic_settings" />
+            android:textSize="14sp"
+            app:icon="@drawable/ic_settings"
+            app:iconPadding="4dp" />
     </LinearLayout>
 
 </RelativeLayout>

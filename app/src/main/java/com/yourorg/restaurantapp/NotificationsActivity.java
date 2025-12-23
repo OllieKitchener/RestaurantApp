@@ -1,6 +1,8 @@
 package com.yourorg.restaurantapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,5 +41,19 @@ public class NotificationsActivity extends AppCompatActivity {
                 notificationsContainer.addView(textView);
             }
         }
+
+        // --- Back Button Navigation ---
+        Button backButton = findViewById(R.id.backButton);
+        if(backButton != null) backButton.setOnClickListener(v -> finish());
+
+        // --- Bottom Nav Bar Logic ---
+        Button homeButton = findViewById(R.id.homeButton);
+        if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
+
+        Button notificationsButton = findViewById(R.id.notificationsButton);
+        if(notificationsButton != null) notificationsButton.setOnClickListener(v -> recreate());
+
+        Button settingsButton = findViewById(R.id.settingsButton);
+        if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 }
