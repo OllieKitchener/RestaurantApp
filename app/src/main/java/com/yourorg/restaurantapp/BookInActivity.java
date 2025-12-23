@@ -31,6 +31,7 @@ public class BookInActivity extends AppCompatActivity {
 
         reservationViewModel = new ViewModelProvider(this).get(ReservationViewModel.class);
 
+        // --- View Initialization (with null checks) ---
         TextInputEditText nameEditText = findViewById(R.id.nameEditText);
         TextInputEditText partySizeEditText = findViewById(R.id.partySizeEditText);
         dateEditText = findViewById(R.id.dateEditText);
@@ -56,12 +57,12 @@ public class BookInActivity extends AppCompatActivity {
             String date = dateEditText.getText().toString();
             String time = timeEditText.getText().toString();
 
-            if (name.isEmpty() || partySizeStr.isEmpty() || date.isEmpty() || time.isEmpty()) {
+            if(name.isEmpty() || partySizeStr.isEmpty() || date.isEmpty() || time.isEmpty()){
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // --- Correctly Save to Database ---
+            // --- Save to Database ---
             int partySize = 0;
             try {
                 partySize = Integer.parseInt(partySizeStr);

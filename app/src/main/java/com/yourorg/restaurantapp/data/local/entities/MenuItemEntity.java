@@ -12,12 +12,13 @@ public class MenuItemEntity {
     public String name;
     public String description;
     public double price;
-    public String category;
+    public String category; // Added missing category field for consistency
     public boolean available;
 
     public MenuItemEntity() { }
 
-    public MenuItemEntity(String name, String description, double price, String category, boolean available) {
+    public MenuItemEntity(int id, String name, String description, double price, String category, boolean available) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -25,7 +26,11 @@ public class MenuItemEntity {
         this.available = available;
     }
 
-    // Restoring the missing toModel() helper method
+    public static MenuItemEntity fromModel(MenuItem m) {
+        return new MenuItemEntity(m.id, m.name, m.description, m.price, m.category, m.available);
+    }
+
+    // Corrected to pass the category field to the model's constructor
     public MenuItem toModel() {
         return new MenuItem(id, name, description, price, category, available);
     }

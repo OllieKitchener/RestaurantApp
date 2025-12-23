@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+// Correcting the import to use the project's actual namespace
 import com.example.myapplication.R;
 import com.yourorg.restaurantapp.model.MenuItem;
 

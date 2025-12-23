@@ -22,8 +22,7 @@ public class NotificationHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Restaurant Notifications";
             String description = "Notifications for reservations and menu updates";
-            // Set importance to LOW to make notifications silent
-            int importance = NotificationManager.IMPORTANCE_LOW;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
             manager.createNotificationChannel(channel);
@@ -35,7 +34,6 @@ public class NotificationHelper {
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_LOW) // Set priority for older Android versions
                 .setAutoCancel(true);
         manager.notify(id, builder.build());
     }

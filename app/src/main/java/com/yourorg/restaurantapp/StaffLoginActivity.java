@@ -2,11 +2,10 @@ package com.yourorg.restaurantapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import android.widget.Button;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
-import com.google.android.material.button.MaterialButton;
 
 public class StaffLoginActivity extends AppCompatActivity {
 
@@ -15,31 +14,16 @@ public class StaffLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_login);
 
-        TextInputEditText emailEditText = findViewById(R.id.staffEmailEditText);
-        TextInputEditText passwordEditText = findViewById(R.id.staffPasswordEditText);
-        TextInputLayout passwordLayout = findViewById(R.id.staffPasswordInputLayout);
-        MaterialButton signInButton = findViewById(R.id.staffSignInButton);
-        MaterialButton customerLoginButton = findViewById(R.id.customerLoginButton);
+        Button loginButton = findViewById(R.id.loginButton);
 
-        signInButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString();
-            String password = passwordEditText.getText().toString();
-
-            // Simple hardcoded check for staff
-            if (email.equals("staff@restaurant.com") && password.equals("password123")) {
-                // Set login state to staff
+        if (loginButton != null) {
+            loginButton.setOnClickListener(v -> {
+                // For now, any staff login attempt is successful
+                Toast.makeText(this, "Staff Login Successful!", Toast.LENGTH_SHORT).show();
                 SharedBookingData.isStaffLoggedIn = true;
-                // Navigate to the new Staff Home Screen
                 startActivity(new Intent(this, StaffHomeActivity.class));
                 finish();
-            } else {
-                passwordLayout.setError("Invalid staff credentials");
-            }
-        });
-
-        customerLoginButton.setOnClickListener(v -> {
-            // Finish this activity to go back to the customer login screen
-            finish();
-        });
+            });
+        }
     }
 }

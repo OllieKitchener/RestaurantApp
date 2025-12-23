@@ -2,13 +2,9 @@ package com.yourorg.restaurantapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.card.MaterialCardView;
 import com.example.myapplication.R;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class MenuCategoryActivity extends AppCompatActivity {
 
@@ -17,32 +13,22 @@ public class MenuCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_category);
 
-        LinearLayout categoryContainer = findViewById(R.id.category_container);
-
-        if (categoryContainer == null) {
-            finish(); // Failsafe
-            return;
-        }
-
-        List<String> categories = Arrays.asList("Recommended", "Deals", "Meat", "Fish", "Vegetarian");
-
-        for (String category : categories) {
-            Button categoryButton = new Button(this);
-            categoryButton.setText(category);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, 8, 0, 8);
-            categoryButton.setLayoutParams(params);
-            categoryButton.setOnClickListener(v -> openDishesForCategory(category));
-            categoryContainer.addView(categoryButton);
-        }
+        // Set up category cards by finding them in the XML and setting a click listener.
+        setupCardClickListener(R.id.card_recommended, "Recommended");
+        setupCardClickListener(R.id.card_deals, "Deals");
+        setupCardClickListener(R.id.card_meat, "Meat");
+        setupCardClickListener(R.id.card_fish, "Fish");
+        setupCardClickListener(R.id.card_vegetarian, "Vegetarian");
     }
 
-    private void openDishesForCategory(String category) {
-        Intent intent = new Intent(this, MenuDishesActivity.class);
-        intent.putExtra("CATEGORY_NAME", category);
-        startActivity(intent);
+    private void setupCardClickListener(int cardId, String categoryName) {
+        MaterialCardView card = findViewById(cardId);
+        if (card != null) {
+            card.setOnClickListener(v -> {
+                Intent intent = new Intent(this, MenuDishesActivity.class);
+                intent.putExtra("CATEGORY_NAME", categoryName);
+                startActivity(intent);
+            });
+        }
     }
 }

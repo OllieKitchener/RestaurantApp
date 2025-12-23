@@ -1,91 +1,78 @@
 package com.yourorg.restaurantapp.ui.staff;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
+// Correcting the import to use the project's actual namespace
 import com.example.myapplication.R;
-import com.yourorg.restaurantapp.data.local.entities.MenuItemEntity;
-import com.yourorg.restaurantapp.viewmodel.MenuViewModel;
-import com.yourorg.restaurantapp.GuestHomeActivity;
-import com.yourorg.restaurantapp.NotificationsActivity;
-import com.yourorg.restaurantapp.SettingsActivity;
-import com.google.android.material.button.MaterialButton;
+import com.yourorg.restaurantapp.api.RestaurantApi;
+import com.yourorg.restaurantapp.api.ApiClient;
+import com.yourorg.restaurantapp.model.MenuItem;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StaffManageMenuActivity extends AppCompatActivity {
     private EditText etName, etDescription, etPrice;
-    private Spinner categorySpinner;
-    private MenuViewModel menuViewModel;
+    private Button btnAdd;
+    private ProgressBar progressBar;
+
+    private RestaurantApi api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_manage_menu);
 
-        menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
-
         etName = findViewById(R.id.et_name);
         etDescription = findViewById(R.id.et_description);
         etPrice = findViewById(R.id.et_price);
-        categorySpinner = findViewById(R.id.categorySpinner);
-        Button btnAdd = findViewById(R.id.btn_add);
-        Button backButton = findViewById(R.id.backButton);
-        MaterialButton homeButton = findViewById(R.id.homeButton);
-        MaterialButton notificationsButton = findViewById(R.id.notificationsButton);
-        MaterialButton settingsButton = findViewById(R.id.settingsButton);
+        btnAdd = findViewById(R.id.btn_add);
+        progressBar = findViewById(R.id.progress_bar);
 
-        // Setup Spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.menu_categories, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(adapter);
+        api = ApiClient.getClient("https://api.example.com/").create(RestaurantApi.class);
 
         btnAdd.setOnClickListener(v -> createMenuItem());
-        backButton.setOnClickListener(v -> finish());
-
-        // Bottom navigation
-        homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
-        notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
-        settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 
     private void createMenuItem() {
         String name = etName.getText().toString().trim();
         String desc = etDescription.getText().toString().trim();
-        String category = categorySpinner.getSelectedItem().toString();
         double price = 0.0;
-        try {
-            price = Double.parseDouble(etPrice.getText().toString().trim());
-        } catch (NumberFormatException e) {
-            etPrice.setError("Invalid price");
-            return;
-        }
+        try { price = Double.parseDouble(etPrice.getText().toString().trim()); } catch (NumberFormatException e) { /* ignore */ }
 
         if (name.isEmpty()) {
-            etName.setError("Name is required");
+            Toast.makeText(this, "Name required", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        MenuItemEntity newItem = new MenuItemEntity();
-        newItem.name = name;
-        newItem.description = desc;
-        newItem.price = price;
-        newItem.category = category;
-        newItem.available = true;
+        progressBar.setVisibility(View.VISIBLE);
+        // Using the correct constructor with a default category
+        MenuItem item = new MenuItem(0, name, desc, price, "Uncategorized", true);
+        api.createMenuItem(item).enqueue(new Callback<MenuItem>() {
+            @Override
+            public void onResponse(Call<MenuItem> call, Response<MenuItem> response) {
+                progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    Toast.makeText(StaffManageMenuActivity.this, "Menu item created", Toast.LENGTH_SHORT).show();
+                    etName.setText(""); etDescription.setText(""); etPrice.setText("");
+                } else {
+                    Toast.makeText(StaffManageMenuActivity.this, "Failed: " + response.code(), Toast.LENGTH_LONG).show();
+                }
+            }
 
-        menuViewModel.addMenuItem(newItem);
-
-        // Clear fields after adding
-        etName.setText("");
-        etDescription.setText("");
-        etPrice.setText("");
+            @Override
+            public void onFailure(Call<MenuItem> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(StaffManageMenuActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

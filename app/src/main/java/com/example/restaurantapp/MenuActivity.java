@@ -1,1 +1,1 @@
-// DELETED - Obsolete file in wrong package.
+// DELETED BY STUDIO BOT

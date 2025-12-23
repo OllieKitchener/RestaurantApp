@@ -1,160 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".SettingsActivity">
 
-    <Button
-        android:id="@+id/backButton"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="4dp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:text="Settings"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/settingsPageTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Settings"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@color/primary"
-        app:layout_constraintTop_toBottomOf="@id/backButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:text="Settings options will appear here."
+        android:textSize="18sp"
+        android:gravity="center"/>
 
-    <ScrollView
-        android:id="@+id/settingsScrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/settingsPageTitle"
-        app:layout_constraintBottom_toTopOf="@id/logOutButton" 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
-
-        <LinearLayout
-            android:id="@+id/settingsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/AccountButton"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:text="Account"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                app:cornerRadius="12dp"
-                android:layout_marginBottom="16dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/DietaryButton"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:text="Dietary"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                app:cornerRadius="12dp"
-                android:layout_marginBottom="16dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/BillingButton"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:text="Billing"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                app:cornerRadius="12dp"
-                android:layout_marginBottom="16dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/NotificationButton"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:text="Notifications"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                app:cornerRadius="12dp"
-                android:layout_marginBottom="16dp"
-                app:icon="@drawable/ic_notifications"
-                app:iconGravity="textStart"
-                app:iconPadding="16dp" />
-
-        </LinearLayout>
-
-    </ScrollView>
-    
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/logOutButton"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:text="Log Out"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/bottomNav"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/homeButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:text="Home"
-            android:textSize="12sp"
-            android:textAllCaps="false"
-            app:icon="@drawable/ic_home"
-            app:iconGravity="top"
-            app:iconPadding="4dp"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/notificationsButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:text="Notifications"
-            android:textSize="12sp"
-            android:textAllCaps="false"
-            app:icon="@drawable/ic_notifications"
-            app:iconGravity="top"
-            app:iconPadding="4dp"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/settingsButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:text="Settings"
-            android:textSize="12sp"
-            android:textAllCaps="false"
-            app:icon="@drawable/ic_settings"
-            app:iconGravity="top"
-            app:iconPadding="4dp"/>
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

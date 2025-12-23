@@ -6,8 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
 import com.google.android.material.button.MaterialButton;
 
-// Adding the missing import for the menu screen
+// Adding all necessary imports for the activities this screen opens
 import com.yourorg.restaurantapp.MenuCategoryActivity;
+import com.yourorg.restaurantapp.BookInActivity;
+import com.yourorg.restaurantapp.ReservationsActivity;
+import com.yourorg.restaurantapp.NotificationsActivity;
+import com.yourorg.restaurantapp.SettingsActivity;
 
 public class GuestHomeActivity extends AppCompatActivity {
     @Override
@@ -18,7 +22,6 @@ public class GuestHomeActivity extends AppCompatActivity {
         // Main action buttons
         MaterialButton menuButton = findViewById(R.id.menuButton);
         if (menuButton != null) {
-            // Launch the new, stable menu system
             menuButton.setOnClickListener(v -> startActivity(new Intent(this, MenuCategoryActivity.class)));
         }
 

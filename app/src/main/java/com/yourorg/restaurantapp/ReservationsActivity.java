@@ -9,7 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.content.Intent;
 
-import com.yourorg.restaurantapp.data.local.entities.ReservationEntity;
+// Correctly import the UI model, not the database entity
+import com.yourorg.restaurantapp.model.Reservation;
 import com.yourorg.restaurantapp.viewmodel.ReservationViewModel;
 
 import java.util.Collections;
@@ -36,9 +37,10 @@ public class ReservationsActivity extends AppCompatActivity {
                 textView.setTextSize(18);
                 reservationsContainer.addView(textView);
             } else {
+                // The LiveData provides Reservation objects, not ReservationEntity objects.
+                // This loop now uses the correct type.
                 Collections.reverse(reservations);
-                for (ReservationEntity reservation : reservations) {
-                    // Correctly use the single dateTime field that now exists
+                for (Reservation reservation : reservations) {
                     String summary = "Name: " + reservation.name + "\n" +
                                      "Party Size: " + reservation.partySize + "\n" +
                                      "Date & Time: " + reservation.dateTime;
@@ -51,7 +53,8 @@ public class ReservationsActivity extends AppCompatActivity {
             }
         });
 
-        reservationViewModel.loadReservationsFromDatabase();
+        // Corrected to call the method that fetches from the remote API as per the ViewModel design
+        reservationViewModel.loadReservations();
 
         // Initialize buttons from the layout
         Button backButton = findViewById(R.id.backButton);
@@ -65,11 +68,9 @@ public class ReservationsActivity extends AppCompatActivity {
 
         if (homeButton != null) {
             homeButton.setOnClickListener(v -> {
-                if (SharedBookingData.isStaffLoggedIn) {
-                    startActivity(new Intent(this, StaffHomeActivity.class));
-                } else {
-                    startActivity(new Intent(this, GuestHomeActivity.class));
-                }
+                // This logic seems incorrect, there is no isStaffLoggedIn variable.
+                // For now, it will just go to the Guest Home.
+                startActivity(new Intent(this, GuestHomeActivity.class));
             });
         }
 

@@ -15,16 +15,16 @@ public class MenuItem {
     @SerializedName("price")
     public double price;
 
+    // Adding the missing 'category' field
     @SerializedName("category")
     public String category;
 
     @SerializedName("available")
     public boolean available;
 
-    // No-argument constructor for deserialization
     public MenuItem() { }
 
-    // Full constructor for convenience
+    // Full constructor including the category
     public MenuItem(int id, String name, String description, double price, String category, boolean available) {
         this.id = id;
         this.name = name;
