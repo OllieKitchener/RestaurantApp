@@ -46,9 +46,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             // 4. Attempt to register user
+            // Note: UserSession handles lowercasing, but we assume it here too for consistency
             boolean isSuccess = UserSession.registerUser(email, password);
+            
             if (isSuccess) {
-                Toast.makeText(this, "Registration successful! Please log in.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show(); // Kept short toast for feedback
                 // Go back to Login screen
                 finish();
             } else {

@@ -7,7 +7,7 @@ public class UserSession {
     // In-memory user store. Data is lost when the app is fully terminated.
     private static final Map<String, String> registeredUsers = new HashMap<>();
 
-    // Pre-load a default user for convenience
+    // Pre-load a default user for convenience (stored in lowercase)
     static {
         registeredUsers.put("customer@test.com", "password");
     }
@@ -19,10 +19,14 @@ public class UserSession {
      * @return True if registration is successful (email not already taken), false otherwise.
      */
     public static boolean registerUser(String email, String password) {
-        if (registeredUsers.containsKey(email)) {
+        if (email == null || password == null) return false;
+        
+        String normalizedEmail = email.trim().toLowerCase();
+        
+        if (registeredUsers.containsKey(normalizedEmail)) {
             return false; // Email already exists
         }
-        registeredUsers.put(email, password);
+        registeredUsers.put(normalizedEmail, password);
         return true;
     }
 
@@ -33,9 +37,13 @@ public class UserSession {
      * @return True if the email exists and the password matches, false otherwise.
      */
     public static boolean validateUser(String email, String password) {
-        if (!registeredUsers.containsKey(email)) {
+        if (email == null || password == null) return false;
+
+        String normalizedEmail = email.trim().toLowerCase();
+
+        if (!registeredUsers.containsKey(normalizedEmail)) {
             return false; // User not found
         }
-        return registeredUsers.get(email).equals(password);
+        return registeredUsers.get(normalizedEmail).equals(password);
     }
 }

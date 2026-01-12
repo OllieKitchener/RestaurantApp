@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.yourorg.restaurantapp.RegisterActivity" />
         <activity android:name="com.yourorg.restaurantapp.GuestHomeActivity" />
         <activity android:name="com.yourorg.restaurantapp.SettingsActivity" />
         <activity android:name="com.yourorg.restaurantapp.BookInSummaryActivity" />
