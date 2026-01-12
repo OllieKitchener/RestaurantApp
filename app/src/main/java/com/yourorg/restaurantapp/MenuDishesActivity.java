@@ -2,9 +2,11 @@ package com.yourorg.restaurantapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.R;
@@ -18,6 +20,7 @@ public class MenuDishesActivity extends AppCompatActivity {
 
     private String category;
     private LinearLayout dishesContainer;
+    private MenuViewModel menuViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class MenuDishesActivity extends AppCompatActivity {
         }
 
         // --- ViewModel Setup ---
-        MenuViewModel menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
+        menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
         menuViewModel.menuLiveData.observe(this, this::displayDishes);
         menuViewModel.loadMenuFromDatabase();
 
@@ -78,27 +81,59 @@ public class MenuDishesActivity extends AppCompatActivity {
             dishesContainer.addView(emptyView);
         } else {
             for (MenuItem item : filteredDishes) {
-                Button dishButton = new Button(this);
-                dishButton.setText(item.name);
-                // Making the button bigger by increasing text size and adding padding
-                dishButton.setTextSize(18f);
-                dishButton.setPadding(0, 40, 0, 40);
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                // Horizontal layout for row
+                LinearLayout row = new LinearLayout(this);
+                row.setOrientation(LinearLayout.HORIZONTAL);
+                row.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
+                ));
+                row.setPadding(0, 8, 0, 8);
+
+                // Dish Button (Takes up most space)
+                Button dishButton = new Button(this);
+                dishButton.setText(item.name);
+                dishButton.setTextSize(18f);
+                dishButton.setPadding(16, 40, 16, 40);
+                
+                LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
+                    0, 
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1.0f // Weight 1 to take remaining space
                 );
-                params.setMargins(0, 8, 0, 8);
-                dishButton.setLayoutParams(params);
+                dishButton.setLayoutParams(btnParams);
                 dishButton.setOnClickListener(v -> openDishDetails(item));
-                dishesContainer.addView(dishButton);
+                row.addView(dishButton);
+
+                // Delete Button (Only if Staff)
+                if (SharedBookingData.isStaffLoggedIn) {
+                    Button deleteButton = new Button(this);
+                    deleteButton.setText("Delete");
+                    // Make it red to indicate danger
+                    deleteButton.setBackgroundColor(0xFFFF0000); 
+                    deleteButton.setTextColor(0xFFFFFFFF);
+                    
+                    LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    deleteParams.setMargins(8, 0, 0, 0);
+                    deleteButton.setLayoutParams(deleteParams);
+                    
+                    deleteButton.setOnClickListener(v -> {
+                        menuViewModel.deleteMenuItem(item);
+                        Toast.makeText(this, "Deleting " + item.name, Toast.LENGTH_SHORT).show();
+                    });
+                    row.addView(deleteButton);
+                }
+
+                dishesContainer.addView(row);
             }
         }
     }
 
     private void openDishDetails(MenuItem dish) {
         Intent intent = new Intent(this, DishDetailsActivity.class);
-        // Pass the entire MenuItem object as a Serializable extra
         intent.putExtra(DishDetailsActivity.EXTRA_MENU_ITEM, dish);
         startActivity(intent);
     }

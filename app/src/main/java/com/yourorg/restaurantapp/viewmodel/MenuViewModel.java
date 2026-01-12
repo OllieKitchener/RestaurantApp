@@ -36,7 +36,7 @@ public class MenuViewModel extends AndroidViewModel {
                     menuLiveData.postValue(menuItems);
                 }
             } else {
-                error.postValue("Failed to load menu.");
+                error.postValue("Failed to load menu from database.");
             }
         });
     }
@@ -51,37 +51,28 @@ public class MenuViewModel extends AndroidViewModel {
         });
     }
 
-    // Private helper to populate 3 dishes per category
+    // Private helper for initial population if empty
     private void populateDefaults() {
-        // --- Recommended ---
-        repository.insertMenuItemLocal(new MenuItemEntity("Chef's Special Steak", "Premium cut with secret sauce.", 35.00, "Recommended", true, "Beef, Secret Sauce, Potatoes", "None"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Truffle Pasta", "Creamy pasta with black truffle.", 28.00, "Recommended", true, "Pasta, Cream, Truffle, Parmesan", "Gluten, Dairy"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Lobster Bisque", "Rich and creamy lobster soup.", 18.00, "Recommended", true, "Lobster, Cream, Brandy, Stock", "Shellfish, Dairy"), null);
-
-        // --- Deals ---
-        repository.insertMenuItemLocal(new MenuItemEntity("Burger & Fries", "Classic burger with a side of fries.", 15.00, "Deals", true, "Beef, Bun, Lettuce, Potato", "Gluten"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Pizza Combo", "Two slices of pizza and a drink.", 12.00, "Deals", true, "Dough, Cheese, Tomato Sauce", "Gluten, Dairy"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Lunch Special", "Soup of the day and half sandwich.", 10.00, "Deals", true, "Varies", "Varies"), null);
-
-        // --- Meat ---
-        repository.insertMenuItemLocal(new MenuItemEntity("Ribeye Steak", "Juicy ribeye cooked to perfection.", 29.99, "Meat", true, "Beef, Salt, Pepper", "None"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Lamb Chops", "Grilled lamb chops with mint jelly.", 32.00, "Meat", true, "Lamb, Mint, Herbs", "None"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("BBQ Ribs", "Slow-cooked pork ribs with BBQ sauce.", 24.50, "Meat", true, "Pork, BBQ Sauce", "None"), null);
-
-        // --- Fish ---
-        repository.insertMenuItemLocal(new MenuItemEntity("Grilled Salmon", "Fresh salmon with lemon butter.", 22.50, "Fish", true, "Salmon, Butter, Lemon", "Fish, Dairy"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Fish & Chips", "Battered cod with chunky chips.", 18.00, "Fish", true, "Cod, Flour, Beer, Potato", "Fish, Gluten"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Seared Tuna", "Sesame crusted tuna steak.", 26.00, "Fish", true, "Tuna, Sesame Seeds, Soy Sauce", "Fish, Sesame, Soy"), null);
-
-        // --- Vegetarian ---
-        repository.insertMenuItemLocal(new MenuItemEntity("Vegetable Stir-fry", "Fresh seasonal vegetables in soy sauce.", 16.00, "Vegetarian", true, "Broccoli, Peppers, Carrots, Soy Sauce", "Soy"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Mushroom Risotto", "Creamy rice with wild mushrooms.", 19.00, "Vegetarian", true, "Rice, Mushrooms, Cream, Parmesan", "Dairy"), null);
-        repository.insertMenuItemLocal(new MenuItemEntity("Spinach Lasagna", "Layers of pasta, spinach, and ricotta.", 17.50, "Vegetarian", true, "Pasta, Spinach, Ricotta, Tomato Sauce", "Gluten, Dairy"), this::loadMenuFromDatabase);
+        // Using correct 7-argument constructor with placeholders for ingredients/allergy info
+        repository.insertMenuItemLocal(new MenuItemEntity("Ribeye Steak", "Juicy steak, served with seasonal vegetables.", 25.99, "Meat", true, "Beef, Salt, Pepper", "None"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Grilled Salmon", "Fresh Atlantic salmon with lemon butter sauce.", 22.50, "Fish", true, "Salmon, Lemon, Butter", "Fish"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Spaghetti Carbonara", "Classic Italian pasta with crispy pancetta.", 18.00, "Pasta", true, "Pasta, Pancetta, Eggs, Parmesan", "Gluten, Dairy, Eggs"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Margherita Pizza", "Simple and delicious cheese pizza, fresh basil.", 15.50, "Pizza", true, "Dough, Tomato, Mozzarella, Basil", "Gluten, Dairy"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Vegetable Stir-fry", "A mix of fresh, seasonal vegetables with a savory sauce.", 16.50, "Vegetarian", true, "Mixed Veg, Soy Sauce", "Soy, Gluten"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Chicken Caesar Salad", "Crisp romaine, grilled chicken, parmesan, croutons.", 14.00, "Salad", true, "Lettuce, Chicken, Croutons, Dressing", "Gluten, Dairy, Eggs"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Chocolate Lava Cake", "Warm chocolate cake with a molten center, vanilla ice cream.", 9.00, "Dessert", true, "Chocolate, Flour, Sugar, Eggs, Cream", "Gluten, Dairy, Eggs"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Cheesecake", "Rich and creamy New York style cheesecake.", 8.50, "Dessert", true, "Cream Cheese, Sugar, Graham Crackers", "Dairy, Gluten"), this::loadMenuFromDatabase);
     }
 
+    // Public method for staff to trigger population (also using correct constructors)
     public void populateDefaultDishes(Runnable onComplete) {
-        populateDefaults();
-        if (onComplete != null) onComplete.run();
+        repository.insertMenuItemLocal(new MenuItemEntity("Classic Burger", "Beef patty, lettuce, tomato, onion, pickles.", 12.00, "Meat", true, "Beef, Bun, Salad", "Gluten"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Tuna Steak", "Seared tuna with a sesame crust, wasabi mayo.", 24.00, "Fish", true, "Tuna, Sesame, Mayo", "Fish, Sesame, Eggs"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Penne Arrabbiata", "Spicy tomato sauce with garlic and chili.", 17.00, "Pasta", true, "Pasta, Tomato, Chili", "Gluten"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Greek Salad", "Cucumbers, tomatoes, olives, feta cheese.", 13.50, "Salad", true, "Cucumber, Tomato, Feta, Olives", "Dairy"), null);
+        repository.insertMenuItemLocal(new MenuItemEntity("Tiramisu", "Coffee-soaked ladyfingers, mascarpone, cocoa.", 9.50, "Dessert", true, "Coffee, Ladyfingers, Mascarpone", "Gluten, Dairy, Eggs"), onComplete);
+        
+        loadMenuFromDatabase();
     }
 
     public void addMenuItem(MenuItemEntity item, Runnable onComplete) {
@@ -90,6 +81,11 @@ public class MenuViewModel extends AndroidViewModel {
 
     public void clearAllMenuItems(Runnable onComplete) {
         repository.deleteAllMenuItemsLocal(onComplete);
+    }
+
+    // New method to delete a specific item
+    public void deleteMenuItem(MenuItem item) {
+        repository.deleteMenuItemLocal(item.id, this::loadMenuFromDatabase);
     }
 
     @Override
