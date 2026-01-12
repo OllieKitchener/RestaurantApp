@@ -1,7 +1,9 @@
 package com.yourorg.restaurantapp.ui.guest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -10,10 +12,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-// Correcting the import to use the project's actual namespace
 import com.example.myapplication.R;
+import com.yourorg.restaurantapp.GuestHomeActivity;
+import com.yourorg.restaurantapp.NotificationsActivity;
+import com.yourorg.restaurantapp.SettingsActivity;
 import com.yourorg.restaurantapp.model.MenuItem;
 import com.yourorg.restaurantapp.viewmodel.MenuViewModel;
+import com.yourorg.restaurantapp.DishDetailsActivity; // Added missing import
 
 import java.util.List;
 
@@ -36,12 +41,24 @@ public class GuestMenuActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         viewModel = new ViewModelProvider(this).get(MenuViewModel.class);
-        viewModel.menuLiveData.observe(this, this::onMenuLoaded);
+        viewModel.menuLiveData.observe(this, menuItems -> {
+            onMenuLoaded(menuItems); 
+            viewModel.loadCategoriesFromDatabase();
+        });
         viewModel.error.observe(this, s -> Toast.makeText(this, s, Toast.LENGTH_LONG).show());
 
         progressBar.setVisibility(View.VISIBLE);
-        // Corrected method name to match the ViewModel
         viewModel.loadMenuFromDatabase();
+
+        // --- Bottom Nav Bar Logic (Guest Context) ---
+        Button homeButton = findViewById(R.id.homeButton);
+        if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
+
+        Button notificationsButton = findViewById(R.id.notificationsButton);
+        if(notificationsButton != null) notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
+
+        Button settingsButton = findViewById(R.id.settingsButton);
+        if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 
     private void onMenuLoaded(List<MenuItem> items) {
@@ -50,7 +67,8 @@ public class GuestMenuActivity extends AppCompatActivity {
     }
 
     private void onMenuItemClicked(MenuItem item) {
-        // TODO: open Menu Details / Reservation screen
-        Toast.makeText(this, "Clicked: " + item.name, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DishDetailsActivity.class);
+        intent.putExtra(DishDetailsActivity.EXTRA_MENU_ITEM, item);
+        startActivity(intent);
     }
 }

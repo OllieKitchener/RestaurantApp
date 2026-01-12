@@ -1,5 +1,6 @@
 package com.yourorg.restaurantapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.R;
@@ -109,9 +111,8 @@ public class MenuDishesActivity extends AppCompatActivity {
                 if (SharedBookingData.isStaffLoggedIn) {
                     Button deleteButton = new Button(this);
                     deleteButton.setText("Delete");
-                    // Make it red to indicate danger
-                    deleteButton.setBackgroundColor(0xFFFF0000); 
-                    deleteButton.setTextColor(0xFFFFFFFF);
+                    deleteButton.setBackgroundColor(0xFFFF0000); // Red
+                    deleteButton.setTextColor(0xFFFFFFFF); // White
                     
                     LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -120,16 +121,29 @@ public class MenuDishesActivity extends AppCompatActivity {
                     deleteParams.setMargins(8, 0, 0, 0);
                     deleteButton.setLayoutParams(deleteParams);
                     
-                    deleteButton.setOnClickListener(v -> {
-                        menuViewModel.deleteMenuItem(item);
-                        Toast.makeText(this, "Deleting " + item.name, Toast.LENGTH_SHORT).show();
-                    });
+                    deleteButton.setOnClickListener(v -> confirmDelete(item));
                     row.addView(deleteButton);
                 }
 
                 dishesContainer.addView(row);
             }
         }
+    }
+
+    private void confirmDelete(MenuItem item) {
+        new AlertDialog.Builder(this)
+            .setTitle("Delete Dish")
+            .setMessage("Are you sure you want to delete " + item.name + "?")
+            .setPositiveButton("Yes", (dialog, which) -> {
+                // Pass a callback to the ViewModel, which will then refresh the menuLiveData
+                menuViewModel.deleteMenuItem(item, () -> {
+                    Toast.makeText(this, "Deleted " + item.name, Toast.LENGTH_SHORT).show();
+                    // The ViewModel's deleteMenuItem now handles calling loadMenuFromDatabase,
+                    // which will in turn cause displayDishes to be called via the LiveData observation.
+                });
+            })
+            .setNegativeButton("No", null)
+            .show();
     }
 
     private void openDishDetails(MenuItem dish) {
