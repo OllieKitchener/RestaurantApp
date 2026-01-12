@@ -22,14 +22,12 @@ public class BookInActivity extends AppCompatActivity {
     private final Calendar myCalendar = Calendar.getInstance();
     private TextInputEditText dateEditText;
     private TextInputEditText timeEditText;
-    private ReservationViewModel reservationViewModel;
+    // Removed ReservationViewModel initialization here, as saving happens in summary.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_in);
-
-        reservationViewModel = new ViewModelProvider(this).get(ReservationViewModel.class);
 
         // --- View Initialization (with null checks) ---
         TextInputEditText nameEditText = findViewById(R.id.nameEditText);
@@ -62,24 +60,20 @@ public class BookInActivity extends AppCompatActivity {
                 return;
             }
 
-            // --- Save to Database ---
-            int partySize = 0;
-            try {
-                partySize = Integer.parseInt(partySizeStr);
-            } catch (NumberFormatException e) { /* Failsafe */ }
-            
-            String dateTime = date + " at " + time;
-            ReservationEntity newReservation = new ReservationEntity(name, partySize, dateTime);
-            reservationViewModel.createReservationLocal(newReservation);
+            // --- Removed premature save to database here ---
+            // int partySize = 0; 
+            // try { partySize = Integer.parseInt(partySizeStr); } catch (NumberFormatException e) { /* Failsafe */ }
+            // String dateTime = date + " at " + time;
+            // ReservationEntity newReservation = new ReservationEntity(name, partySize, dateTime);
+            // reservationViewModel.createReservationLocal(newReservation);
 
-            // --- Navigate to Summary ---
-            String summary = "Name: " + name + "\n" +
-                             "Party Size: " + partySizeStr + "\n" +
-                             "Date: " + date + "\n" +
-                             "Time: " + time;
-
+            // --- Navigate to Summary and pass all structured data ---
             Intent intent = new Intent(BookInActivity.this, BookInSummaryActivity.class);
-            intent.putExtra("summary", summary);
+            intent.putExtra("name", name);
+            intent.putExtra("partySize", partySizeStr);
+            intent.putExtra("date", date);
+            intent.putExtra("time", time);
+            // The summary string is constructed in the summary activity now
             startActivity(intent);
         });
     }

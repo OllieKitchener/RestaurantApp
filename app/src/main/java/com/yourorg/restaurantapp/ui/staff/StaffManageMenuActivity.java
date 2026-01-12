@@ -17,7 +17,7 @@ import com.example.myapplication.R;
 import com.yourorg.restaurantapp.GuestHomeActivity;
 import com.yourorg.restaurantapp.NotificationsActivity;
 import com.yourorg.restaurantapp.SettingsActivity;
-import com.yourorg.restaurantapp.StaffHomeActivity; // Correct import
+import com.yourorg.restaurantapp.StaffHomeActivity;
 import com.yourorg.restaurantapp.data.local.entities.MenuItemEntity;
 import com.yourorg.restaurantapp.viewmodel.MenuViewModel;
 
@@ -54,6 +54,8 @@ public class StaffManageMenuActivity extends AppCompatActivity {
         // Wire up listeners
         btnAdd.setOnClickListener(v -> createMenuItem());
         btnClearAll.setOnClickListener(v -> clearAllDishes());
+        
+        // Calls populateDefaultDishes in MenuViewModel
         btnAddSampleDishes.setOnClickListener(v -> addSampleDishes());
 
         // --- Back Button Navigation ---
@@ -62,7 +64,7 @@ public class StaffManageMenuActivity extends AppCompatActivity {
 
         // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
-        // Corrected: Home button now goes to StaffHomeActivity
+        // Home button for staff goes to StaffHomeActivity
         if(homeButton != null) homeButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, StaffHomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -79,7 +81,8 @@ public class StaffManageMenuActivity extends AppCompatActivity {
     private void setupCategorySpinner() {
         // Define the categories to match the customer view
         String[] categories = new String[]{
-                "Recommended", "Deals", "Meat", "Fish", "Vegetarian"
+                "Recommended", "Deals", "Meat", "Fish", "Vegetarian", 
+                "Dessert", "Drinks", "Pasta", "Pizza", "Salad", "Soup"
         };
 
         // Create an adapter to bind the array to the spinner
@@ -91,14 +94,13 @@ public class StaffManageMenuActivity extends AppCompatActivity {
     private void createMenuItem() {
         String name = etName.getText().toString().trim();
         String desc = etDescription.getText().toString().trim();
-        // Get category from Spinner
         String category = spinnerCategory.getSelectedItem().toString();
         String priceStr = etPrice.getText().toString().trim();
         String ingredients = etIngredients.getText().toString().trim();
         String allergyInfo = etAllergyInfo.getText().toString().trim();
 
-        if (name.isEmpty() || priceStr.isEmpty()) {
-            Toast.makeText(this, "Name and Price are required", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty() || priceStr.isEmpty() || category.isEmpty()) {
+            Toast.makeText(this, "Name, Category, and Price are required", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -123,8 +125,7 @@ public class StaffManageMenuActivity extends AppCompatActivity {
             etPrice.setText("");
             etIngredients.setText("");
             etAllergyInfo.setText("");
-            // Reset spinner to first item? Optional.
-            spinnerCategory.setSelection(0);
+            spinnerCategory.setSelection(0); // Reset spinner to first item
         });
     }
 
@@ -149,6 +150,7 @@ public class StaffManageMenuActivity extends AppCompatActivity {
         btnAdd.setEnabled(false);
         btnAddSampleDishes.setEnabled(false);
 
+        // Calling populateDefaultDishes in MenuViewModel, which now adds a few more sample items
         menuViewModel.populateDefaultDishes(() -> {
             progressBar.setVisibility(View.GONE);
             btnClearAll.setEnabled(true);

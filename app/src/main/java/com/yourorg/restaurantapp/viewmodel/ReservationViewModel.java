@@ -24,27 +24,14 @@ public class ReservationViewModel extends AndroidViewModel {
 
     public ReservationViewModel(@NonNull Application application) {
         super(application);
-        // Using placeholder URL as we are now fully in-memory
-        repository = new RestaurantRepository(application, "https://localhost/");
+        // Use the singleton instance of the repository
+        repository = RestaurantRepository.getInstance(application);
     }
 
     // Remote call (kept for compatibility, though likely unused now)
     public void loadReservations() {
-        repository.fetchReservationsRemote(new Callback<List<Reservation>>() {
-            @Override
-            public void onResponse(Call<List<Reservation>> call, Response<List<Reservation>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    reservationsLiveData.postValue(response.body());
-                } else {
-                    error.postValue("Failed to load reservations: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Reservation>> call, Throwable t) {
-                error.postValue(t.getMessage());
-            }
-        });
+        // This is a remote call, which we are not using for local data.
+        // Keeping it here for potential future use.
     }
 
     public void createReservation(Reservation reservation, Callback<Reservation> callback) {
@@ -53,7 +40,7 @@ public class ReservationViewModel extends AndroidViewModel {
 
     // Local in-memory operations
     public void createReservationLocal(ReservationEntity reservation) {
-        repository.insertReservationLocal(reservation, null);
+        repository.insertReservationLocal(reservation, () -> loadReservationsFromDatabase()); // Refresh after insert
     }
 
     public void loadReservationsFromDatabase() {
