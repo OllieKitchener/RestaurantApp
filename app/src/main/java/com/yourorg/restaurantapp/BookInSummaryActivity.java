@@ -23,8 +23,6 @@ public class BookInSummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_in_summary);
 
-        // Initialize ViewModel using the standard provider, which uses the application context
-        // and thus the Singleton Repository.
         reservationViewModel = new ViewModelProvider(this).get(ReservationViewModel.class);
 
         Button backButton = findViewById(R.id.backButton);
@@ -61,16 +59,19 @@ public class BookInSummaryActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
 
         confirmButton.setOnClickListener(v -> {
-            // CRITICAL: Save the reservation to the shared Singleton Repository via ViewModel
+            // Save the reservation to the shared Singleton Repository via ViewModel
             ReservationEntity newReservation = new ReservationEntity(bookingName, bookingPartySize, bookingDateTime);
             reservationViewModel.createReservationLocal(newReservation);
 
-            // Show confirmation
             NotificationHelper notificationHelper = new NotificationHelper(this);
             notificationHelper.showNotification(1, "Booking Confirmed!", "Your booking details are in the app.");
 
-            String notificationMessage = "Booking Confirmed!\n" + summary;
-            NotificationsActivity.notificationMessages.add(notificationMessage);
+            // --- CRITICAL FIX: Send notifications to both customer and staff lists ---
+            String customerNotificationMessage = "Booking Confirmed!\n" + summary;
+            SharedBookingData.customerNotificationMessages.add(customerNotificationMessage);
+
+            String staffNotificationMessage = "NEW BOOKING!\nName: " + bookingName + ", Party: " + bookingPartySize + ", Time: " + bookingDateTime;
+            SharedBookingData.staffNotificationMessages.add(staffNotificationMessage);
 
             // Navigate back to Home
             Intent homeIntent = new Intent(BookInSummaryActivity.this, GuestHomeActivity.class);

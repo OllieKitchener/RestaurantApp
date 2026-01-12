@@ -8,12 +8,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NotificationsActivity extends AppCompatActivity {
-
-    public static List<String> notificationMessages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,17 +21,32 @@ public class NotificationsActivity extends AppCompatActivity {
         LinearLayout notificationsContainer = findViewById(R.id.notificationsContainer);
 
         if (notificationsContainer == null) {
-            finish(); // Failsafe
+            finish(); 
             return;
         }
 
-        if (notificationMessages.isEmpty()) {
+        List<String> messagesToDisplay;
+        String homeActivityClass; // To determine where 'Home' button should go
+
+        if (SharedBookingData.isStaffLoggedIn) {
+            messagesToDisplay = SharedBookingData.staffNotificationMessages;
+            homeActivityClass = StaffHomeActivity.class.getName();
+        } else {
+            messagesToDisplay = SharedBookingData.customerNotificationMessages;
+            homeActivityClass = GuestHomeActivity.class.getName();
+        }
+
+        if (messagesToDisplay.isEmpty()) {
             TextView textView = new TextView(this);
             textView.setText("No new notifications.");
             textView.setTextSize(18);
             notificationsContainer.addView(textView);
         } else {
-            for (String message : notificationMessages) {
+            // Display messages in reverse chronological order (most recent first)
+            List<String> reversedMessages = new java.util.ArrayList<>(messagesToDisplay);
+            Collections.reverse(reversedMessages);
+
+            for (String message : reversedMessages) {
                 TextView textView = new TextView(this);
                 textView.setText(message);
                 textView.setTextSize(16);
@@ -48,10 +61,21 @@ public class NotificationsActivity extends AppCompatActivity {
 
         // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
-        if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
+        if(homeButton != null) homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, (Class<?>) null);
+            try {
+                intent.setClass(this, Class.forName(homeActivityClass));
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            } catch (ClassNotFoundException e) {
+                // Fallback or log error
+                e.printStackTrace();
+                startActivity(new Intent(this, GuestHomeActivity.class)); // Default fallback
+            }
+        });
 
         Button notificationsButton = findViewById(R.id.notificationsButton);
-        if(notificationsButton != null) notificationsButton.setOnClickListener(v -> recreate());
+        if(notificationsButton != null) notificationsButton.setOnClickListener(v -> recreate()); // Recreate to refresh
 
         Button settingsButton = findViewById(R.id.settingsButton);
         if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
