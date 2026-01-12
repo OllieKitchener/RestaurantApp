@@ -33,7 +33,6 @@ public class StaffManageMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_manage_menu);
 
-        // Initialize UI components
         etName = findViewById(R.id.et_name);
         etDescription = findViewById(R.id.et_description);
         etPrice = findViewById(R.id.et_price);
@@ -45,26 +44,17 @@ public class StaffManageMenuActivity extends AppCompatActivity {
         btnAddSampleDishes = findViewById(R.id.btn_add_sample_dishes);
         progressBar = findViewById(R.id.progress_bar);
 
-        // Set up the Category Spinner
         setupCategorySpinner();
-
-        // Initialize ViewModel
         menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
 
-        // Wire up listeners
         btnAdd.setOnClickListener(v -> createMenuItem());
         btnClearAll.setOnClickListener(v -> clearAllDishes());
-        
-        // Calls populateDefaultDishes in MenuViewModel
         btnAddSampleDishes.setOnClickListener(v -> addSampleDishes());
 
-        // --- Back Button Navigation ---
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 
-        // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
-        // Home button for staff goes to StaffHomeActivity
         if(homeButton != null) homeButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, StaffHomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -79,13 +69,7 @@ public class StaffManageMenuActivity extends AppCompatActivity {
     }
 
     private void setupCategorySpinner() {
-        // Define the categories to match the customer view
-        String[] categories = new String[]{
-                "Recommended", "Deals", "Meat", "Fish", "Vegetarian", 
-                "Dessert", "Drinks", "Pasta", "Pizza", "Salad", "Soup"
-        };
-
-        // Create an adapter to bind the array to the spinner
+        String[] categories = new String[]{"Recommended", "Deals", "Meat", "Fish", "Vegetarian"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
@@ -99,12 +83,12 @@ public class StaffManageMenuActivity extends AppCompatActivity {
         String ingredients = etIngredients.getText().toString().trim();
         String allergyInfo = etAllergyInfo.getText().toString().trim();
 
-        if (name.isEmpty() || priceStr.isEmpty() || category.isEmpty()) {
-            Toast.makeText(this, "Name, Category, and Price are required", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty() || priceStr.isEmpty()) {
+            Toast.makeText(this, "Name and Price are required", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        double price = 0.0;
+        double price;
         try {
             price = Double.parseDouble(priceStr);
         } catch (NumberFormatException e) {
@@ -119,44 +103,41 @@ public class StaffManageMenuActivity extends AppCompatActivity {
         menuViewModel.addMenuItem(newItem, () -> {
             progressBar.setVisibility(View.GONE);
             btnAdd.setEnabled(true);
-            Toast.makeText(this, "Menu item added to database!", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Menu item added to database!", Toast.LENGTH_SHORT).show(); // Removed
             etName.setText("");
             etDescription.setText("");
             etPrice.setText("");
             etIngredients.setText("");
             etAllergyInfo.setText("");
-            spinnerCategory.setSelection(0); // Reset spinner to first item
+            spinnerCategory.setSelection(0);
         });
     }
 
     private void clearAllDishes() {
         progressBar.setVisibility(View.VISIBLE);
-        btnClearAll.setEnabled(false);
-        btnAdd.setEnabled(false);
-        btnAddSampleDishes.setEnabled(false);
+        setButtonsEnabled(false);
 
         menuViewModel.clearAllMenuItems(() -> {
             progressBar.setVisibility(View.GONE);
-            btnClearAll.setEnabled(true);
-            btnAdd.setEnabled(true);
-            btnAddSampleDishes.setEnabled(true);
-            Toast.makeText(this, "All dishes cleared from database!", Toast.LENGTH_SHORT).show();
+            setButtonsEnabled(true);
+            // Toast.makeText(this, "All dishes cleared from database!", Toast.LENGTH_SHORT).show(); // Removed
         });
     }
 
     private void addSampleDishes() {
         progressBar.setVisibility(View.VISIBLE);
-        btnClearAll.setEnabled(false);
-        btnAdd.setEnabled(false);
-        btnAddSampleDishes.setEnabled(false);
+        setButtonsEnabled(false);
 
-        // Calling populateDefaultDishes in MenuViewModel, which now adds a few more sample items
         menuViewModel.populateDefaultDishes(() -> {
             progressBar.setVisibility(View.GONE);
-            btnClearAll.setEnabled(true);
-            btnAdd.setEnabled(true);
-            btnAddSampleDishes.setEnabled(true);
-            Toast.makeText(StaffManageMenuActivity.this, "Sample dishes added to database!", Toast.LENGTH_SHORT).show();
+            setButtonsEnabled(true);
+            // Toast.makeText(StaffManageMenuActivity.this, "Sample dishes added to database!", Toast.LENGTH_SHORT).show(); // Removed
         });
+    }
+    
+    private void setButtonsEnabled(boolean enabled) {
+        btnAdd.setEnabled(enabled);
+        btnClearAll.setEnabled(enabled);
+        btnAddSampleDishes.setEnabled(enabled);
     }
 }
