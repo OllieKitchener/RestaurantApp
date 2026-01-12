@@ -19,8 +19,7 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress" />
+        android:hint="Username" />
 
     <EditText
         android:id="@+id/password"
@@ -44,13 +43,5 @@
         android:layout_marginTop="16dp"
         android:text="Staff Login"
         android:textColor="@color/primary" />
-        
-    <TextView
-        android:id="@+id/registerLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Don't have an account? Register"
-        android:textColor="@android:color/holo_blue_dark" />
 
 </LinearLayout>

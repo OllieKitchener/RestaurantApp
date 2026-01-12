@@ -24,7 +24,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.yourorg.restaurantapp.RegisterActivity" />
         <activity android:name="com.yourorg.restaurantapp.GuestHomeActivity" />
         <activity android:name="com.yourorg.restaurantapp.SettingsActivity" />
         <activity android:name="com.yourorg.restaurantapp.BookInSummaryActivity" />
@@ -35,6 +34,7 @@
         <activity android:name="com.yourorg.restaurantapp.StaffLoginActivity" />
         <activity android:name="com.yourorg.restaurantapp.StaffHomeActivity" />
         <activity android:name="com.yourorg.restaurantapp.ui.staff.StaffManageMenuActivity" />
+        <!-- Registered new staff menu preview activity -->
         <activity android:name="com.yourorg.restaurantapp.ui.staff.StaffMenuCategoryActivity" />
         <activity android:name="com.yourorg.restaurantapp.MenuCategoryActivity" />
         <activity android:name="com.yourorg.restaurantapp.MenuDishesActivity" />
