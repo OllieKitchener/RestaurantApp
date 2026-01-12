@@ -34,14 +34,20 @@
             android:hint="Price"
             android:inputType="numberDecimal" />
 
-        <EditText
-            android:id="@+id/et_category"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Category:"
+            android:textStyle="bold"/>
+
+        <Spinner
+            android:id="@+id/spinner_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Category (e.g. Meat, Fish, Deals)" />
+            android:layout_marginTop="4dp"
+            android:minHeight="48dp" />
 
-        <!-- Added input fields for Ingredients and Allergy Info -->
         <EditText
             android:id="@+id/et_ingredients"
             android:layout_width="match_parent"
