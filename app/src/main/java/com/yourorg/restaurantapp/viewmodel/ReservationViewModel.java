@@ -10,6 +10,7 @@ import com.yourorg.restaurantapp.data.repository.RestaurantRepository;
 import com.yourorg.restaurantapp.model.Reservation;
 import com.yourorg.restaurantapp.data.local.entities.ReservationEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,9 +24,11 @@ public class ReservationViewModel extends AndroidViewModel {
 
     public ReservationViewModel(@NonNull Application application) {
         super(application);
-        repository = new RestaurantRepository(application, "https://api.example.com/");
+        // Using placeholder URL as we are now fully in-memory
+        repository = new RestaurantRepository(application, "https://localhost/");
     }
 
+    // Remote call (kept for compatibility, though likely unused now)
     public void loadReservations() {
         repository.fetchReservationsRemote(new Callback<List<Reservation>>() {
             @Override
@@ -48,14 +51,20 @@ public class ReservationViewModel extends AndroidViewModel {
         repository.createReservationRemote(reservation, callback);
     }
 
-    // Restoring the missing local database method
+    // Local in-memory operations
     public void createReservationLocal(ReservationEntity reservation) {
         repository.insertReservationLocal(reservation, null);
     }
 
     public void loadReservationsFromDatabase() {
-        repository.getAllReservationsLocal(reservations -> {
-             // This part seems to be missing the conversion to the Model, which might be a future issue
+        repository.getAllReservationsLocal(entities -> {
+            if (entities != null) {
+                List<Reservation> reservations = new ArrayList<>();
+                for (ReservationEntity entity : entities) {
+                    reservations.add(entity.toModel());
+                }
+                reservationsLiveData.postValue(reservations);
+            }
         });
     }
 }

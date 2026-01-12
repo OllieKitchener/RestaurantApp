@@ -20,5 +20,19 @@ public class StaffHomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, com.yourorg.restaurantapp.ui.staff.StaffManageMenuActivity.class));
             });
         }
+
+        // --- Back Button Navigation ---
+        Button backButton = findViewById(R.id.backButton);
+        if(backButton != null) backButton.setOnClickListener(v -> finish());
+
+        // --- Bottom Nav Bar Logic ---
+        Button homeButton = findViewById(R.id.homeButton);
+        if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
+
+        Button notificationsButton = findViewById(R.id.notificationsButton);
+        if(notificationsButton != null) notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
+
+        Button settingsButton = findViewById(R.id.settingsButton);
+        if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 }

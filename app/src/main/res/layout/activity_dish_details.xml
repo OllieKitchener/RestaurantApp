@@ -10,26 +10,89 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:padding="16dp"
         android:layout_above="@+id/bottomNav">
-
-        <TextView
-            android:id="@+id/dish_name_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:layout_marginBottom="24dp"
-            android:textSize="34sp"
-            android:textStyle="bold"
-            tools:text="Dish Name" />
 
         <Button
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:text="Back" />
+
+        <TextView
+            android:id="@+id/dish_name_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            tools:text="Dish Name" />
+
+        <TextView
+            android:id="@+id/dish_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textSize="18sp"
+            android:gravity="center"
+            tools:text="A brief description of the delicious dish."/>
+
+        <TextView
+            android:id="@+id/dish_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            tools:text="$0.00"/>
+
+        <TextView
+            android:id="@+id/dish_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            tools:text="Category: Meat"/>
+
+        <TextView
+            android:id="@+id/dish_ingredients_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Ingredients:"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/dish_ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            tools:text="Ingredient 1, Ingredient 2, Ingredient 3"/>
+
+        <TextView
+            android:id="@+id/dish_allergy_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Allergy Information:"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/dish_allergy_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            tools:text="Contains: Gluten, Dairy"/>
 
     </LinearLayout>
 
@@ -37,10 +100,10 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:layout_alignParentBottom="true">
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
@@ -49,9 +112,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Home"
-            android:textSize="10sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_home"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
@@ -60,9 +123,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
-            android:textSize="10sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_notifications"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
@@ -71,9 +134,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Settings"
-            android:textSize="10sp"
+            android:textSize="13sp"
             app:icon="@drawable/ic_settings"
-            app:iconPadding="4dp" />
+            app:iconPadding="1dp" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -17,6 +17,18 @@ public class SettingsActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 
+        // --- Sign Out Logic ---
+        Button signOutButton = findViewById(R.id.signOutButton);
+        if (signOutButton != null) {
+            signOutButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, LoginActivity.class);
+                // Clear the activity stack so the user can't go back to settings
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            });
+        }
+
         // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));

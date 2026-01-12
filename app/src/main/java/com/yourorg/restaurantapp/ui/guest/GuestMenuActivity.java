@@ -40,7 +40,8 @@ public class GuestMenuActivity extends AppCompatActivity {
         viewModel.error.observe(this, s -> Toast.makeText(this, s, Toast.LENGTH_LONG).show());
 
         progressBar.setVisibility(View.VISIBLE);
-        viewModel.loadMenu();
+        // Corrected method name to match the ViewModel
+        viewModel.loadMenuFromDatabase();
     }
 
     private void onMenuLoaded(List<MenuItem> items) {

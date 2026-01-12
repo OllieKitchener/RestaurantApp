@@ -1,29 +1,8 @@
+// This file has been emptied temporarily to remove Room database logic.
+// Its functionality is now handled by in-memory data structures in the repository.
 package com.yourorg.restaurantapp.data.local.dao;
 
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
-import androidx.room.Delete;
+// No actual DAO interface present during in-memory mode.
+// All database operations are now handled by the RestaurantRepository directly.
 
-import com.yourorg.restaurantapp.data.local.entities.ReservationEntity;
-
-import java.util.List;
-
-@Dao
-public interface ReservationDao {
-    @Query("SELECT * FROM reservations")
-    List<ReservationEntity> getAll();
-
-    @Insert
-    long insert(ReservationEntity reservation);
-
-    @Update
-    int update(ReservationEntity reservation);
-
-    @Delete
-    int delete(ReservationEntity reservation);
-
-    @Query("DELETE FROM reservations")
-    void deleteAll();
-}
+public interface ReservationDao { }

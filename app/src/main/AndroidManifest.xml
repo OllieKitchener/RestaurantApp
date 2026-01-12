@@ -34,8 +34,6 @@
         <activity android:name="com.yourorg.restaurantapp.StaffLoginActivity" />
         <activity android:name="com.yourorg.restaurantapp.StaffHomeActivity" />
         <activity android:name="com.yourorg.restaurantapp.ui.staff.StaffManageMenuActivity" />
-
-        <!-- Restoring the declarations for the menu activities -->
         <activity android:name="com.yourorg.restaurantapp.MenuCategoryActivity" />
         <activity android:name="com.yourorg.restaurantapp.MenuDishesActivity" />
         <activity android:name="com.yourorg.restaurantapp.DishDetailsActivity" />

@@ -1,33 +1,8 @@
+// This file has been emptied temporarily to remove Room database logic.
+// Its functionality is now handled by in-memory data structures in the repository.
 package com.yourorg.restaurantapp.data.local;
 
-import androidx.room.Database;
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
-import android.content.Context;
+// No Room database definition present during in-memory mode.
+// All database operations are now handled by the RestaurantRepository directly.
 
-import com.yourorg.restaurantapp.data.local.entities.MenuItemEntity;
-import com.yourorg.restaurantapp.data.local.entities.ReservationEntity;
-import com.yourorg.restaurantapp.data.local.dao.MenuItemDao;
-import com.yourorg.restaurantapp.data.local.dao.ReservationDao;
-
-@Database(entities = {MenuItemEntity.class, ReservationEntity.class}, version = 6, exportSchema = false)
-public abstract class AppDatabase extends RoomDatabase {
-    private static volatile AppDatabase INSTANCE;
-
-    public abstract MenuItemDao menuItemDao();
-    public abstract ReservationDao reservationDao();
-
-    public static AppDatabase getInstance(Context context) {
-        if (INSTANCE == null) {
-            synchronized (AppDatabase.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "restaurant_db")
-                            .fallbackToDestructiveMigration()
-                            .build();
-                }
-            }
-        }
-        return INSTANCE;
-    }
-}
+public class AppDatabase { }

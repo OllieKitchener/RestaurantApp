@@ -98,9 +98,8 @@ public class MenuDishesActivity extends AppCompatActivity {
 
     private void openDishDetails(MenuItem dish) {
         Intent intent = new Intent(this, DishDetailsActivity.class);
-        if (dish != null && dish.name != null) {
-            intent.putExtra("DISH_NAME", dish.name);
-            startActivity(intent);
-        }
+        // Pass the entire MenuItem object as a Serializable extra
+        intent.putExtra(DishDetailsActivity.EXTRA_MENU_ITEM, dish);
+        startActivity(intent);
     }
 }
