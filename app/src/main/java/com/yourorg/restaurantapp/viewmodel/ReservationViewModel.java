@@ -1,6 +1,7 @@
 package com.yourorg.restaurantapp.viewmodel;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -24,36 +25,31 @@ public class ReservationViewModel extends AndroidViewModel {
 
     public ReservationViewModel(@NonNull Application application) {
         super(application);
-        // Using placeholder URL as we are now fully in-memory
-        repository = new RestaurantRepository(application, "https://localhost/");
+        repository = RestaurantRepository.getInstance(application.getApplicationContext());
     }
 
-    // Remote call (kept for compatibility, though likely unused now)
+    // Remote call (kept for compatibility)
     public void loadReservations() {
-        repository.fetchReservationsRemote(new Callback<List<Reservation>>() {
-            @Override
-            public void onResponse(Call<List<Reservation>> call, Response<List<Reservation>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    reservationsLiveData.postValue(response.body());
-                } else {
-                    error.postValue("Failed to load reservations: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Reservation>> call, Throwable t) {
-                error.postValue(t.getMessage());
-            }
-        });
+        // Unused in local mode
     }
 
     public void createReservation(Reservation reservation, Callback<Reservation> callback) {
         repository.createReservationRemote(reservation, callback);
     }
 
-    // Local in-memory operations
+    // Local in-memory operations - Now accepts a callback!
+    public void createReservationLocal(ReservationEntity reservation, Runnable onComplete) {
+        repository.insertReservationLocal(reservation, () -> {
+            loadReservationsFromDatabase(); // Refresh internal live data
+            if (onComplete != null) {
+                onComplete.run();
+            }
+        }); 
+    }
+
+    // Overload for backward compatibility if needed, though we should use the one above
     public void createReservationLocal(ReservationEntity reservation) {
-        repository.insertReservationLocal(reservation, null);
+        createReservationLocal(reservation, null);
     }
 
     public void loadReservationsFromDatabase() {

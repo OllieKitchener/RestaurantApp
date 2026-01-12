@@ -8,13 +8,14 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.R;
 import com.yourorg.restaurantapp.data.local.entities.ReservationEntity;
 import com.yourorg.restaurantapp.viewmodel.ReservationViewModel;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class BookInActivity extends AppCompatActivity {
@@ -22,14 +23,11 @@ public class BookInActivity extends AppCompatActivity {
     private final Calendar myCalendar = Calendar.getInstance();
     private TextInputEditText dateEditText;
     private TextInputEditText timeEditText;
-    private ReservationViewModel reservationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_in);
-
-        reservationViewModel = new ViewModelProvider(this).get(ReservationViewModel.class);
 
         // --- View Initialization (with null checks) ---
         TextInputEditText nameEditText = findViewById(R.id.nameEditText);
@@ -52,34 +50,63 @@ public class BookInActivity extends AppCompatActivity {
         setupTimePicker();
 
         submitButton.setOnClickListener(v -> {
-            String name = nameEditText.getText().toString();
-            String partySizeStr = partySizeEditText.getText().toString();
-            String date = dateEditText.getText().toString();
-            String time = timeEditText.getText().toString();
+            String name = nameEditText.getText().toString().trim();
+            String partySizeStr = partySizeEditText.getText().toString().trim();
+            String dateStr = dateEditText.getText().toString().trim();
+            String timeStr = timeEditText.getText().toString().trim();
 
-            if(name.isEmpty() || partySizeStr.isEmpty() || date.isEmpty() || time.isEmpty()){
+            if(name.isEmpty() || partySizeStr.isEmpty() || dateStr.isEmpty() || timeStr.isEmpty()){
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // --- Save to Database ---
             int partySize = 0;
             try {
                 partySize = Integer.parseInt(partySizeStr);
-            } catch (NumberFormatException e) { /* Failsafe */ }
-            
-            String dateTime = date + " at " + time;
-            ReservationEntity newReservation = new ReservationEntity(name, partySize, dateTime);
-            reservationViewModel.createReservationLocal(newReservation);
+                if (partySize <= 0) {
+                    Toast.makeText(this, "Party size must be at least 1", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid party size format", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // --- Navigate to Summary ---
-            String summary = "Name: " + name + "\n" +
-                             "Party Size: " + partySizeStr + "\n" +
-                             "Date: " + date + "\n" +
-                             "Time: " + time;
+            // --- Date and Time Validation ---
+            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US);
+            Date selectedDateTime = null;
+            try {
+                selectedDateTime = dateTimeFormat.parse(dateStr + " " + timeStr);
+            } catch (ParseException e) {
+                Toast.makeText(this, "Invalid date or time format", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            // 1. Future Date Validation
+            if (selectedDateTime != null && selectedDateTime.before(Calendar.getInstance().getTime())) {
+                Toast.makeText(this, "Booking must be for a future date and time", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // 2. Time Range Validation (12:00 PM to 8:59 PM)
+            Calendar selectedCalendar = Calendar.getInstance();
+            if (selectedDateTime != null) {
+                selectedCalendar.setTime(selectedDateTime);
+            }
+            int hourOfDay = selectedCalendar.get(Calendar.HOUR_OF_DAY);
+
+            // CRITICAL FIX: Change > 21 to >= 21 to exclude 9:00 PM (hour 21) and later
+            if (hourOfDay < 12 || hourOfDay >= 21) { // 21 is 9 PM, so >= 21 means 9 PM onwards is invalid
+                Toast.makeText(this, "Bookings can only be made between 12:00 PM and 8:59 PM", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            // All validations passed, proceed to summary
             Intent intent = new Intent(BookInActivity.this, BookInSummaryActivity.class);
-            intent.putExtra("summary", summary);
+            intent.putExtra("name", name);
+            intent.putExtra("partySize", partySizeStr);
+            intent.putExtra("date", dateStr);
+            intent.putExtra("time", timeStr);
             startActivity(intent);
         });
     }
@@ -91,7 +118,10 @@ public class BookInActivity extends AppCompatActivity {
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateDateLabel();
         };
-        dateEditText.setOnClickListener(v -> new DatePickerDialog(BookInActivity.this, dateSetListener, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+        DatePickerDialog datePickerDialog = new DatePickerDialog(BookInActivity.this, dateSetListener, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
+        // Set minimum date to today
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000); // Subtract 1 second to include today
+        dateEditText.setOnClickListener(v -> datePickerDialog.show());
     }
 
     private void setupTimePicker() {
