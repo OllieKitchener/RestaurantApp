@@ -4,39 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MenuCategoryActivity">
+    tools:context=".GuestHomeActivity">
 
     <LinearLayout
-        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:orientation="vertical"
         android:padding="16dp">
 
         <Button
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/menuButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Back" />
+            android:text="View Menu"
+            android:layout_marginBottom="16dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/bookTableButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:text="Menu Categories"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:text="Book a Table"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/myReservationsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Reservations"/>
+
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/category_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/top_bar"
-        android:layout_above="@+id/bottomNav"
-        android:paddingHorizontal="16dp"
-        tools:listitem="@layout/category_item" />
 
     <LinearLayout
         android:id="@+id/bottomNav"

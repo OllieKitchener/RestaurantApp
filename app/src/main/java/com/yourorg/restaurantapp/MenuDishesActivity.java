@@ -1,12 +1,10 @@
 package com.yourorg.restaurantapp;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,12 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.yourorg.restaurantapp.model.MenuItem;
+import com.yourorg.restaurantapp.util.OnItemClickListener;
 import com.yourorg.restaurantapp.viewmodel.MenuViewModel;
-import com.yourorg.restaurantapp.DishAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MenuDishesActivity extends AppCompatActivity {
 
@@ -28,105 +25,77 @@ public class MenuDishesActivity extends AppCompatActivity {
     private MenuViewModel menuViewModel;
     private DishAdapter adapter;
     private TextView emptyView;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_dishes);
 
-        // Safely get category from intent
-        if (getIntent() != null) {
-            category = getIntent().getStringExtra("CATEGORY_NAME");
-        }
-        if (category == null) {
-            category = "Dishes"; // Fallback category
-        }
+        category = getIntent().getStringExtra("CATEGORY_NAME");
+        if (category == null) category = "Dishes";
         
         TextView title = findViewById(R.id.dish_list_title);
-        if(title != null) {
-            title.setText(category);
-        }
+        title.setText(category);
 
         emptyView = findViewById(R.id.empty_view);
+        recyclerView = findViewById(R.id.dishes_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Setup RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.dishes_recycler_view);
-        if (recyclerView != null) {
-            adapter = new DishAdapter(this::openDishDetails, this::confirmDelete);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapter);
-        } else {
-            // If RecyclerView itself is null, something is fundamentally wrong with the layout.
-            Toast.makeText(this, "Error initializing UI elements (RecyclerView).", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
-        // Setup ViewModel
         menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
-        // CRITICAL: Ensure observation is only set up once and robustly.
-        menuViewModel.menuLiveData.observe(this, menuItems -> {
-            // Pass this activity's lifecycle owner to observe, ensures proper cleanup
-            updateDishes(menuItems);
-        });
+        menuViewModel.menuLiveData.observe(this, this::updateDishes);
 
-        // --- Navigation ---
-        Button backButton = findViewById(R.id.backButton);
-        if(backButton != null) backButton.setOnClickListener(v -> finish());
+        setupNavigation();
         
-        Button homeButton = findViewById(R.id.homeButton);
-        if(homeButton != null) homeButton.setOnClickListener(v -> {
-            boolean isStaff = SharedBookingData.isStaffLoggedIn;
-            Intent intent = new Intent(this, isStaff ? StaffHomeActivity.class : GuestHomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
-
-        Button notificationsButton = findViewById(R.id.notificationsButton);
-        if(notificationsButton != null) notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
-
-        Button settingsButton = findViewById(R.id.settingsButton);
-        if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
+        // Load data only once when the activity is first created.
+        menuViewModel.loadMenuFromDatabase();
     }
-
+    
+    // CRITICAL FIX: The "Scorched Earth" approach.
+    // Every time the screen is shown, we create a brand new, clean adapter.
+    // This prevents any corrupted state from recycled views from causing a crash.
     @Override
     protected void onResume() {
         super.onResume();
-        // Ensure menu data is loaded when activity becomes visible
-        if (menuViewModel != null) {
-            menuViewModel.loadMenuFromDatabase();
-        }
+        adapter = new DishAdapter(this::openDishDetails, this::confirmDelete);
+        recyclerView.setAdapter(adapter);
+        
+        // The LiveData observer will automatically re-deliver the last known data
+        // to our new adapter via the updateDishes method, populating the screen.
+    }
+    
+    private void setupNavigation() {
+        findViewById(R.id.backButton).setOnClickListener(v -> finish());
+        findViewById(R.id.homeButton).setOnClickListener(v -> {
+            Intent intent = new Intent(this, App.isStaffLoggedIn() ? StaffHomeActivity.class : GuestHomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+        findViewById(R.id.notificationsButton).setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
+        findViewById(R.id.settingsButton).setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 
     private void updateDishes(List<MenuItem> menuItems) {
-        // Robust null checks
-        if (menuItems == null || adapter == null || emptyView == null) return; 
+        if (adapter == null) return;
 
-        List<MenuItem> filteredDishes = new ArrayList<>();
-        for (MenuItem item : menuItems) {
-            // Additional null check for individual item properties
-            if (item != null && item.category != null && item.category.equalsIgnoreCase(category)) {
-                filteredDishes.add(item);
+        List<MenuItem> filtered = new ArrayList<>();
+        if (menuItems != null) {
+            for (MenuItem item : menuItems) {
+                if (item != null && item.category != null && category.equalsIgnoreCase(item.category)) {
+                    filtered.add(item);
+                }
             }
         }
         
-        // CRITICAL: Always submit a *new* list to ListAdapter to avoid ConcurrentModificationException
-        adapter.submitList(new ArrayList<>(filteredDishes));
-
-        emptyView.setVisibility(filteredDishes.isEmpty() ? View.VISIBLE : View.GONE);
+        adapter.setDishes(filtered);
+        emptyView.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void confirmDelete(MenuItem item) {
         new AlertDialog.Builder(this)
             .setTitle("Delete Dish")
             .setMessage("Are you sure you want to delete '" + item.name + "'?")
-            .setPositiveButton("Yes", (dialog, which) -> {
-                if (menuViewModel != null) {
-                    menuViewModel.deleteMenuItem(item, () -> {
-                        // UI will update automatically via LiveData observation upon successful deletion.
-                    });
-                }
-            })
+            .setPositiveButton("Yes", (dialog, which) -> menuViewModel.deleteMenuItem(item, null))
             .setNegativeButton("No", null)
             .show();
     }

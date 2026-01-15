@@ -2,56 +2,51 @@ package com.yourorg.restaurantapp.ui.staff;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.view.View; 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import com.google.android.material.card.MaterialCardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.myapplication.R;
 import com.yourorg.restaurantapp.MenuDishesActivity;
 import com.yourorg.restaurantapp.NotificationsActivity;
 import com.yourorg.restaurantapp.SettingsActivity;
 import com.yourorg.restaurantapp.StaffHomeActivity;
 import com.yourorg.restaurantapp.viewmodel.MenuViewModel;
-import com.yourorg.restaurantapp.SharedBookingData; // Import SharedBookingData
-
-import java.util.List;
+import com.yourorg.restaurantapp.App;
 
 public class StaffMenuCategoryActivity extends AppCompatActivity {
 
     private MenuViewModel menuViewModel;
     private CategoryAdapter adapter;
-    private MaterialCardView cardRecommended, cardDeals, cardMeat, cardFish, cardVegetarian;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_menu_category);
 
+        RecyclerView recyclerView = findViewById(R.id.category_recycler_view);
+        if (recyclerView != null) {
+            // Using the onItemClick interface
+            adapter = new CategoryAdapter(category -> onCategoryClicked(category));
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+        }
+
         menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
-
-        cardRecommended = findViewById(R.id.card_recommended);
-        cardDeals = findViewById(R.id.card_deals);
-        cardMeat = findViewById(R.id.card_meat);
-        cardFish = findViewById(R.id.card_fish);
-        cardVegetarian = findViewById(R.id.card_vegetarian);
-
-        setupCardClickListener(cardRecommended, "Recommended");
-        setupCardClickListener(cardDeals, "Deals");
-        setupCardClickListener(cardMeat, "Meat");
-        setupCardClickListener(cardFish, "Fish");
-        setupCardClickListener(cardVegetarian, "Vegetarian");
-
-        menuViewModel.categoriesLiveData.observe(this, this::updateCategoryCards);
+        menuViewModel.categoriesLiveData.observe(this, categories -> {
+            if (categories != null && adapter != null) {
+                adapter.submitList(new java.util.ArrayList<>(categories));
+            }
+        });
 
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> {
-            // CRITICAL: When navigating Home from Staff Preview, reset staff status
-            SharedBookingData.isStaffLoggedIn = false;
             Intent intent = new Intent(this, StaffHomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
@@ -67,26 +62,14 @@ public class StaffMenuCategoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        menuViewModel.loadCategoriesFromDatabase();
-    }
-
-    private void setupCardClickListener(MaterialCardView card, String categoryName) {
-        if (card != null) {
-            card.setOnClickListener(v -> {
-                Intent intent = new Intent(this, MenuDishesActivity.class);
-                intent.putExtra("CATEGORY_NAME", categoryName);
-                startActivity(intent);
-            });
+        if (menuViewModel != null) {
+            menuViewModel.loadCategoriesFromDatabase();
         }
     }
 
-    private void updateCategoryCards(List<String> categories) {
-        if (categories == null) return;
-
-        if (cardRecommended != null) cardRecommended.setVisibility(categories.contains("Recommended") ? View.VISIBLE : View.GONE);
-        if (cardDeals != null) cardDeals.setVisibility(categories.contains("Deals") ? View.VISIBLE : View.GONE);
-        if (cardMeat != null) cardMeat.setVisibility(categories.contains("Meat") ? View.VISIBLE : View.GONE);
-        if (cardFish != null) cardFish.setVisibility(categories.contains("Fish") ? View.VISIBLE : View.GONE);
-        if (cardVegetarian != null) cardVegetarian.setVisibility(categories.contains("Vegetarian") ? View.VISIBLE : View.GONE);
+    private void onCategoryClicked(String categoryName) {
+        Intent intent = new Intent(this, MenuDishesActivity.class);
+        intent.putExtra("CATEGORY_NAME", categoryName);
+        startActivity(intent);
     }
 }

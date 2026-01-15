@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class SharedBookingData {
-    public static boolean isStaffLoggedIn = false;
+    // Removed isStaffLoggedIn as it's now managed globally in App.java
     
     // Customer-specific notifications
     public static final List<String> customerNotificationMessages = Collections.synchronizedList(new ArrayList<>());
 
-    // NEW: Staff-specific notifications
+    // Staff-specific notifications
     public static final List<String> staffNotificationMessages = Collections.synchronizedList(new ArrayList<>());
 }

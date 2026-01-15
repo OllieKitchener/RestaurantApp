@@ -1,54 +1,57 @@
 package com.yourorg.restaurantapp;
 
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
-import com.google.android.material.button.MaterialButton;
-
-// Adding all necessary imports for the activities this screen opens
-import com.yourorg.restaurantapp.MenuCategoryActivity;
-import com.yourorg.restaurantapp.BookInActivity;
-import com.yourorg.restaurantapp.ReservationsActivity;
-import com.yourorg.restaurantapp.NotificationsActivity;
-import com.yourorg.restaurantapp.SettingsActivity;
+import com.yourorg.restaurantapp.data.repository.RestaurantRepository;
 
 public class GuestHomeActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);
+        setContentView(R.layout.activity_guest_home);
+        
+        // Data reset is now handled in onResume for guaranteed freshness.
 
-        // Main action buttons
-        MaterialButton menuButton = findViewById(R.id.menuButton);
+        Button menuButton = findViewById(R.id.menuButton);
+        Button bookTableButton = findViewById(R.id.bookTableButton);
+        Button myReservationsButton = findViewById(R.id.myReservationsButton);
+
         if (menuButton != null) {
             menuButton.setOnClickListener(v -> startActivity(new Intent(this, MenuCategoryActivity.class)));
         }
 
-        MaterialButton bookInButton = findViewById(R.id.bookInButton);
-        if (bookInButton != null) {
-            bookInButton.setOnClickListener(v -> startActivity(new Intent(this, BookInActivity.class)));
+        if (bookTableButton != null) {
+            bookTableButton.setOnClickListener(v -> startActivity(new Intent(this, BookInActivity.class)));
         }
 
-        MaterialButton reservationsButton = findViewById(R.id.reservationsButton);
-        if (reservationsButton != null) {
-            reservationsButton.setOnClickListener(v -> startActivity(new Intent(this, ReservationsActivity.class)));
-        }
-        
-        // Bottom navigation buttons
-        MaterialButton homeButton = findViewById(R.id.homeButton);
-        if (homeButton != null) {
-             homeButton.setOnClickListener(v -> recreate());
+        if (myReservationsButton != null) {
+            myReservationsButton.setOnClickListener(v -> startActivity(new Intent(this, ReservationsActivity.class)));
         }
 
-        MaterialButton notificationsButton = findViewById(R.id.notificationsButton);
-        if (notificationsButton != null) {
-            notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
-        }
+        // --- Bottom Nav Bar Logic ---
+        setupBottomNavBar();
+    }
 
-        MaterialButton settingsButton = findViewById(R.id.settingsButton);
-        if (settingsButton != null) {
-            settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // CRITICAL FIX: Reset all in-memory data every time the home screen is shown.
+        // This acts as the "mini memory wipe" you observed, preventing cumulative errors.
+        RestaurantRepository.getInstance(getApplicationContext()).resetData();
+    }
+
+    private void setupBottomNavBar() {
+        Button homeButton = findViewById(R.id.homeButton);
+        if(homeButton != null) homeButton.setOnClickListener(v -> recreate());
+
+        Button notificationsButton = findViewById(R.id.notificationsButton);
+        if(notificationsButton != null) notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
+
+        Button settingsButton = findViewById(R.id.settingsButton);
+        if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 }

@@ -27,8 +27,11 @@ public class StaffLoginActivity extends AppCompatActivity {
                 String password = passwordEditText.getText().toString();
 
                 if ("staff".equals(username) && "password".equals(password)) {
-                    Toast.makeText(this, "Staff Login Successful!", Toast.LENGTH_SHORT).show();
-                    SharedBookingData.isStaffLoggedIn = true; // Set staff flag
+                    // Toast.makeText(this, "Staff Login Successful!", Toast.LENGTH_SHORT).show(); // Toast removed as requested previously
+                    
+                    // CRITICAL FIX: Use global App.setStaffLoggedIn(true)
+                    App.setStaffLoggedIn(true); 
+                    
                     startActivity(new Intent(this, StaffHomeActivity.class));
                     finish();
                 } else {
@@ -40,7 +43,7 @@ public class StaffLoginActivity extends AppCompatActivity {
         if (customerLoginLink != null) {
             customerLoginLink.setOnClickListener(v -> {
                 // CRITICAL FIX: Reset staff status to false when navigating back to customer login
-                SharedBookingData.isStaffLoggedIn = false;
+                App.setStaffLoggedIn(false);
                 Intent intent = new Intent(this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

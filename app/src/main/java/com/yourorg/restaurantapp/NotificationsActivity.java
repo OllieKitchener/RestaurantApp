@@ -28,7 +28,8 @@ public class NotificationsActivity extends AppCompatActivity {
         List<String> messagesToDisplay;
         String homeActivityClass; // To determine where 'Home' button should go
 
-        if (SharedBookingData.isStaffLoggedIn) {
+        // CRITICAL FIX: Use global App.isStaffLoggedIn() instead of SharedBookingData
+        if (App.isStaffLoggedIn()) {
             messagesToDisplay = SharedBookingData.staffNotificationMessages;
             homeActivityClass = StaffHomeActivity.class.getName();
         } else {

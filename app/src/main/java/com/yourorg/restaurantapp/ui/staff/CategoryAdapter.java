@@ -10,14 +10,13 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-
-import java.util.function.Consumer;
+import com.yourorg.restaurantapp.util.OnItemClickListener;
 
 public class CategoryAdapter extends ListAdapter<String, CategoryAdapter.CategoryViewHolder> {
 
-    private final Consumer<String> onCategoryClicked;
+    private final OnItemClickListener<String> onCategoryClicked;
 
-    public CategoryAdapter(Consumer<String> onCategoryClicked) {
+    public CategoryAdapter(OnItemClickListener<String> onCategoryClicked) {
         super(DIFF_CALLBACK);
         this.onCategoryClicked = onCategoryClicked;
     }
@@ -38,19 +37,21 @@ public class CategoryAdapter extends ListAdapter<String, CategoryAdapter.Categor
         private final TextView categoryName;
         private String currentCategory;
 
-        public CategoryViewHolder(@NonNull View itemView, Consumer<String> onCategoryClicked) {
+        public CategoryViewHolder(@NonNull View itemView, OnItemClickListener<String> onCategoryClicked) {
             super(itemView);
             categoryName = itemView.findViewById(R.id.category_name);
             itemView.setOnClickListener(v -> {
-                if (currentCategory != null) {
-                    onCategoryClicked.accept(currentCategory);
+                if (currentCategory != null && onCategoryClicked != null) {
+                    onCategoryClicked.onItemClick(currentCategory);
                 }
             });
         }
 
         public void bind(String category) {
             currentCategory = category;
-            categoryName.setText(category);
+            if (categoryName != null) {
+                categoryName.setText(category);
+            }
         }
     }
 

@@ -5,92 +5,87 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.myapplication.R;
 import com.yourorg.restaurantapp.model.MenuItem;
+import com.yourorg.restaurantapp.util.OnItemClickListener;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Objects;
-import java.util.function.Consumer;
+public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishViewHolder> {
 
-public class DishAdapter extends ListAdapter<MenuItem, DishAdapter.DishViewHolder> {
+    private final List<MenuItem> dishes = new ArrayList<>();
+    private final OnItemClickListener<MenuItem> onDishClicked;
+    private final OnItemClickListener<MenuItem> onDeleteClicked;
 
-    private final Consumer<MenuItem> onDishClicked;
-    private final Consumer<MenuItem> onDeleteClicked;
-
-    public DishAdapter(Consumer<MenuItem> onDishClicked, Consumer<MenuItem> onDeleteClicked) {
-        super(DIFF_CALLBACK);
+    public DishAdapter(OnItemClickListener<MenuItem> onDishClicked, OnItemClickListener<MenuItem> onDeleteClicked) {
         this.onDishClicked = onDishClicked;
         this.onDeleteClicked = onDeleteClicked;
+    }
+
+    public void setDishes(List<MenuItem> newDishes) {
+        dishes.clear();
+        if (newDishes != null) {
+            dishes.addAll(newDishes);
+        }
+        notifyDataSetChanged();
+    }
+    
+    public void clear() {
+        dishes.clear();
+        notifyDataSetChanged();
+    }
+
+    // CRITICAL FIX: By returning the position, we force RecyclerView to treat every item
+    // as a unique view type, effectively disabling view recycling. This prevents crashes
+    // related to stale, recycled views.
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @NonNull
     @Override
     public DishViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dish_item, parent, false);
-        return new DishViewHolder(view, onDishClicked, onDeleteClicked);
+        return new DishViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DishViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        holder.bind(dishes.get(position), onDishClicked, onDeleteClicked);
+    }
+    
+    @Override
+    public int getItemCount() {
+        return dishes.size();
     }
 
     static class DishViewHolder extends RecyclerView.ViewHolder {
         private final Button dishNameButton;
         private final Button deleteButton;
-        private MenuItem currentItem;
 
-        public DishViewHolder(@NonNull View itemView, Consumer<MenuItem> onDishClicked, Consumer<MenuItem> onDeleteClicked) {
+        public DishViewHolder(@NonNull View itemView) {
             super(itemView);
             dishNameButton = itemView.findViewById(R.id.dish_name_button);
             deleteButton = itemView.findViewById(R.id.delete_dish_button);
-
-            dishNameButton.setOnClickListener(v -> {
-                if (currentItem != null && onDishClicked != null) {
-                    onDishClicked.accept(currentItem);
-                }
-            });
-
-            deleteButton.setOnClickListener(v -> {
-                if (currentItem != null && onDeleteClicked != null) {
-                    onDeleteClicked.accept(currentItem);
-                }
-            });
         }
 
-        public void bind(MenuItem item) {
-            currentItem = item;
-            if (item != null) {
-                dishNameButton.setText(item.name != null ? item.name : "Unknown Dish");
-            }
+        void bind(final MenuItem item, final OnItemClickListener<MenuItem> dishListener, final OnItemClickListener<MenuItem> deleteListener) {
+            dishNameButton.setText(item.name);
+            dishNameButton.setOnClickListener(v -> {
+                if (dishListener != null) dishListener.onItemClick(item);
+            });
 
-            // Show delete button only if staff is logged in
-            if (SharedBookingData.isStaffLoggedIn) {
+            if (App.isStaffLoggedIn()) {
                 deleteButton.setVisibility(View.VISIBLE);
+                deleteButton.setOnClickListener(v -> {
+                    if (deleteListener != null) deleteListener.onItemClick(item);
+                });
             } else {
                 deleteButton.setVisibility(View.GONE);
+                deleteButton.setOnClickListener(null);
             }
         }
     }
-
-    private static final DiffUtil.ItemCallback<MenuItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<MenuItem>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull MenuItem oldItem, @NonNull MenuItem newItem) {
-            // Safe null checks
-            if (oldItem == null || newItem == null) return false;
-            return oldItem.id == newItem.id;
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull MenuItem oldItem, @NonNull MenuItem newItem) {
-            // Safe null checks for content
-            if (oldItem == null || newItem == null) return false;
-            return Objects.equals(oldItem.name, newItem.name) && 
-                   Objects.equals(oldItem.description, newItem.description) &&
-                   oldItem.price == newItem.price;
-        }
-    };
 }

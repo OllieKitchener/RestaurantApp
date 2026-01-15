@@ -2,32 +2,51 @@ package com.yourorg.restaurantapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.card.MaterialCardView;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.myapplication.R;
+import com.yourorg.restaurantapp.ui.staff.CategoryAdapter;
+import com.yourorg.restaurantapp.viewmodel.MenuViewModel;
 
 public class MenuCategoryActivity extends AppCompatActivity {
+
+    private MenuViewModel menuViewModel;
+    private CategoryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_category);
 
-        // Set up category cards by finding them in the XML and setting a click listener.
-        setupCardClickListener(R.id.card_recommended, "Recommended");
-        setupCardClickListener(R.id.card_deals, "Deals");
-        setupCardClickListener(R.id.card_meat, "Meat");
-        setupCardClickListener(R.id.card_fish, "Fish");
-        setupCardClickListener(R.id.card_vegetarian, "Vegetarian");
+        RecyclerView recyclerView = findViewById(R.id.category_recycler_view);
+        if (recyclerView != null) {
+            // Using the onItemClick interface
+            adapter = new CategoryAdapter(category -> onCategoryClicked(category));
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+        }
 
-        // --- Back Button Navigation ---
+        menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
+        menuViewModel.categoriesLiveData.observe(this, categories -> {
+            if (categories != null && adapter != null) {
+                adapter.submitList(new java.util.ArrayList<>(categories));
+            }
+        });
+
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 
-        // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
-        if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
+        if(homeButton != null) homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, GuestHomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
 
         Button notificationsButton = findViewById(R.id.notificationsButton);
         if(notificationsButton != null) notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
@@ -36,14 +55,17 @@ public class MenuCategoryActivity extends AppCompatActivity {
         if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 
-    private void setupCardClickListener(int cardId, String categoryName) {
-        MaterialCardView card = findViewById(cardId);
-        if (card != null) {
-            card.setOnClickListener(v -> {
-                Intent intent = new Intent(this, MenuDishesActivity.class);
-                intent.putExtra("CATEGORY_NAME", categoryName);
-                startActivity(intent);
-            });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (menuViewModel != null) {
+            menuViewModel.loadCategoriesFromDatabase();
         }
+    }
+
+    private void onCategoryClicked(String categoryName) {
+        Intent intent = new Intent(this, MenuDishesActivity.class);
+        intent.putExtra("CATEGORY_NAME", categoryName);
+        startActivity(intent);
     }
 }

@@ -18,13 +18,4 @@
         android:textSize="18sp"
         android:textColor="@android:color/black" />
 
-    <Button
-        android:id="@+id/delete_dish_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        android:backgroundTint="@android:color/holo_red_dark"
-        android:visibility="gone" 
-        android:layout_marginStart="8dp" />
-
 </LinearLayout>

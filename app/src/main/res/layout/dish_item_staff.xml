@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:text="Delete"
         android:backgroundTint="@android:color/holo_red_dark"
-        android:visibility="gone" 
         android:layout_marginStart="8dp" />
 
 </LinearLayout>

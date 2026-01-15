@@ -16,8 +16,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        // --- CRITICAL FIX: Explicitly reset staff status to false on customer login screen ---
-        SharedBookingData.isStaffLoggedIn = false;
+        // CRITICAL FIX: Explicitly reset staff status to false via global App state
+        App.setStaffLoggedIn(false);
 
         EditText emailEditText = findViewById(R.id.username);
         EditText passwordEditText = findViewById(R.id.password);
@@ -30,15 +30,17 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString();
 
-                // --- Email Format Validation ---
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(this, "Please enter email and password.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (!email.contains("@") || !email.contains(".")) {
                     Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // --- Login Check using UserSession ---
                 if (UserSession.validateUser(email, password)) {
-                    // Login successful - navigate to Guest Home
                     startActivity(new Intent(this, GuestHomeActivity.class));
                     finish(); 
                 } else {
@@ -49,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (staffLoginLink != null) {
             staffLoginLink.setOnClickListener(v -> {
-                // When navigating to Staff Login, ensure customer context is clear
-                SharedBookingData.isStaffLoggedIn = false; // Explicitly ensure we are not staff when going to staff login
+                // When navigating to Staff Login, explicitly ensure staff status is false before opening staff login screen
+                App.setStaffLoggedIn(false);
                 startActivity(new Intent(this, StaffLoginActivity.class));
             });
         }
