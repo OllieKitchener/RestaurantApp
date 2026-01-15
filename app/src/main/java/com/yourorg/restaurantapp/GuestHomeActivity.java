@@ -14,8 +14,17 @@ public class GuestHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest_home);
         
-        // Data reset is now handled in onResume for guaranteed freshness.
+        setupButtons();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // CRITICAL FIX: Reset ONLY the menu data, leaving reservations intact.
+        RestaurantRepository.getInstance(getApplicationContext()).resetMenuData();
+    }
+
+    private void setupButtons() {
         Button menuButton = findViewById(R.id.menuButton);
         Button bookTableButton = findViewById(R.id.bookTableButton);
         Button myReservationsButton = findViewById(R.id.myReservationsButton);
@@ -33,18 +42,6 @@ public class GuestHomeActivity extends AppCompatActivity {
         }
 
         // --- Bottom Nav Bar Logic ---
-        setupBottomNavBar();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // CRITICAL FIX: Reset all in-memory data every time the home screen is shown.
-        // This acts as the "mini memory wipe" you observed, preventing cumulative errors.
-        RestaurantRepository.getInstance(getApplicationContext()).resetData();
-    }
-
-    private void setupBottomNavBar() {
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> recreate());
 

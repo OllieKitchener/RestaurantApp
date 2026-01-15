@@ -25,7 +25,6 @@ public class MenuDishesActivity extends AppCompatActivity {
     private MenuViewModel menuViewModel;
     private DishAdapter adapter;
     private TextView emptyView;
-    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,29 +38,27 @@ public class MenuDishesActivity extends AppCompatActivity {
         title.setText(category);
 
         emptyView = findViewById(R.id.empty_view);
-        recyclerView = findViewById(R.id.dishes_recycler_view);
+
+        // CRITICAL FIX: Adapter is created only ONCE here.
+        RecyclerView recyclerView = findViewById(R.id.dishes_recycler_view);
+        adapter = new DishAdapter(this::openDishDetails, this::confirmDelete);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
         menuViewModel.menuLiveData.observe(this, this::updateDishes);
 
         setupNavigation();
         
-        // Load data only once when the activity is first created.
+        // Initial data load
         menuViewModel.loadMenuFromDatabase();
     }
     
-    // CRITICAL FIX: The "Scorched Earth" approach.
-    // Every time the screen is shown, we create a brand new, clean adapter.
-    // This prevents any corrupted state from recycled views from causing a crash.
+    // CRITICAL FIX: onResume now ONLY refreshes the data. It does not create a new adapter.
     @Override
     protected void onResume() {
         super.onResume();
-        adapter = new DishAdapter(this::openDishDetails, this::confirmDelete);
-        recyclerView.setAdapter(adapter);
-        
-        // The LiveData observer will automatically re-deliver the last known data
-        // to our new adapter via the updateDishes method, populating the screen.
+        menuViewModel.loadMenuFromDatabase();
     }
     
     private void setupNavigation() {

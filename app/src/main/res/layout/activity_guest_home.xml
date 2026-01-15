@@ -4,34 +4,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".GuestHomeActivity">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Restaurant Management App"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="48dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/titleTextView"
         android:layout_centerInParent="true"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:gravity="center">
 
         <Button
             android:id="@+id/menuButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:text="View Menu"
-            android:layout_marginBottom="16dp"/>
+            android:textSize="20sp"
+            android:layout_marginBottom="24dp"/>
 
         <Button
             android:id="@+id/bookTableButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:text="Book a Table"
-            android:layout_marginBottom="16dp"/>
+            android:textSize="20sp"
+            android:layout_marginBottom="24dp"/>
 
         <Button
             android:id="@+id/myReservationsButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="My Reservations"/>
+            android:layout_height="80dp"
+            android:text="My Reservations"
+            android:textSize="20sp"/>
 
     </LinearLayout>
 
@@ -41,8 +57,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
@@ -51,9 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Home"
-            android:textSize="13sp"
-            app:icon="@drawable/ic_home"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_home" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
@@ -62,9 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
-            android:textSize="13sp"
-            app:icon="@drawable/ic_notifications"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_notifications" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
@@ -73,9 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Settings"
-            android:textSize="13sp"
-            app:icon="@drawable/ic_settings"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_settings" />
     </LinearLayout>
 
 </RelativeLayout>

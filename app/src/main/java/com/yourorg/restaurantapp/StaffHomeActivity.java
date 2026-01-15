@@ -16,8 +16,17 @@ public class StaffHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_home);
 
-        // Data reset is now handled in onResume for guaranteed freshness.
+        setupButtons();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // CRITICAL FIX: Reset ONLY the menu data, leaving reservations intact.
+        RestaurantRepository.getInstance(getApplicationContext()).resetMenuData();
+    }
+
+    private void setupButtons() {
         Button manageMenuButton = findViewById(R.id.manageMenuButton);
         Button previewMenuButton = findViewById(R.id.previewMenuButton);
 
@@ -29,17 +38,7 @@ public class StaffHomeActivity extends AppCompatActivity {
             previewMenuButton.setOnClickListener(v -> startActivity(new Intent(this, StaffMenuCategoryActivity.class)));
         }
 
-        setupBottomNavBar();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // CRITICAL FIX: Reset all in-memory data every time the home screen is shown.
-        RestaurantRepository.getInstance(getApplicationContext()).resetData();
-    }
-
-    private void setupBottomNavBar() {
+        // --- Bottom Nav Bar Logic ---
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 

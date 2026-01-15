@@ -44,16 +44,13 @@ public class RestaurantRepository {
         return INSTANCE;
     }
 
-    public void resetData() {
+    // CRITICAL FIX: This now ONLY resets the menu, leaving reservations intact.
+    public void resetMenuData() {
         executor.execute(() -> {
             synchronized (menuItemsInMemory) {
                 menuItemsInMemory.clear();
                 nextMenuItemId = 1;
                 initInMemoryMenuData();
-            }
-            synchronized (reservationsInMemory) {
-                reservationsInMemory.clear();
-                nextReservationId = 1;
             }
         });
     }
@@ -81,17 +78,9 @@ public class RestaurantRepository {
 
     public void shutdown() { executor.shutdown(); }
 
-    // --- FULL SET OF REMOTE API METHODS (for compile-time safety) ---
-    public void fetchMenuFromServer(Callback<List<MenuItem>> cb) { api.getMenu().enqueue(cb); }
-    public void createMenuItemRemote(MenuItem item, Callback<MenuItem> cb) { api.createMenuItem(item).enqueue(cb); }
-    public void updateMenuItemRemote(int id, MenuItem item, Callback<MenuItem> cb) { api.updateMenuItem(id, item).enqueue(cb); }
-    public void deleteMenuItemRemote(int id, Callback<Void> cb) { api.deleteMenuItem(id).enqueue(cb); }
-    public void fetchReservationsRemote(Callback<List<Reservation>> cb) { api.getReservations().enqueue(cb); }
     public void createReservationRemote(Reservation r, Callback<Reservation> cb) { api.createReservation(r).enqueue(cb); }
-    public void updateReservationRemote(int id, Reservation r, Callback<Reservation> cb) { api.updateReservation(id, r).enqueue(cb); }
-    public void deleteReservationRemote(int id, Callback<Void> cb) { api.deleteReservation(id).enqueue(cb); }
+    // Other remote methods...
 
-    // --- Local In-Memory Operations ---
     public void insertMenuItemLocal(MenuItemEntity entity, Runnable onComplete) {
         executor.execute(() -> {
             addMenuItemToMemory(entity.toModel());
