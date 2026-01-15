@@ -39,7 +39,6 @@ public class MenuDishesActivity extends AppCompatActivity {
 
         emptyView = findViewById(R.id.empty_view);
 
-        // CRITICAL FIX: Adapter is created only ONCE here.
         RecyclerView recyclerView = findViewById(R.id.dishes_recycler_view);
         adapter = new DishAdapter(this::openDishDetails, this::confirmDelete);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -49,15 +48,13 @@ public class MenuDishesActivity extends AppCompatActivity {
         menuViewModel.menuLiveData.observe(this, this::updateDishes);
 
         setupNavigation();
-        
-        // Initial data load
-        menuViewModel.loadMenuFromDatabase();
     }
     
-    // CRITICAL FIX: onResume now ONLY refreshes the data. It does not create a new adapter.
     @Override
     protected void onResume() {
         super.onResume();
+        // Refresh data every time the screen is shown.
+        // This is important so the list updates after an item is added or deleted.
         menuViewModel.loadMenuFromDatabase();
     }
     
@@ -73,8 +70,6 @@ public class MenuDishesActivity extends AppCompatActivity {
     }
 
     private void updateDishes(List<MenuItem> menuItems) {
-        if (adapter == null) return;
-
         List<MenuItem> filtered = new ArrayList<>();
         if (menuItems != null) {
             for (MenuItem item : menuItems) {
@@ -88,11 +83,16 @@ public class MenuDishesActivity extends AppCompatActivity {
         emptyView.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
+    // This method is passed to the adapter to handle delete clicks.
     private void confirmDelete(MenuItem item) {
         new AlertDialog.Builder(this)
             .setTitle("Delete Dish")
             .setMessage("Are you sure you want to delete '" + item.name + "'?")
-            .setPositiveButton("Yes", (dialog, which) -> menuViewModel.deleteMenuItem(item, null))
+            .setPositiveButton("Yes", (dialog, which) -> {
+                // On confirmation, call the ViewModel to delete the item.
+                // LiveData will automatically trigger updateDishes to refresh the list.
+                menuViewModel.deleteMenuItem(item, null);
+            })
             .setNegativeButton("No", null)
             .show();
     }

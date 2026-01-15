@@ -36,14 +36,6 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishViewHolder
         notifyDataSetChanged();
     }
 
-    // CRITICAL FIX: By returning the position, we force RecyclerView to treat every item
-    // as a unique view type, effectively disabling view recycling. This prevents crashes
-    // related to stale, recycled views.
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
-
     @NonNull
     @Override
     public DishViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,7 +45,8 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull DishViewHolder holder, int position) {
-        holder.bind(dishes.get(position), onDishClicked, onDeleteClicked);
+        MenuItem item = dishes.get(position);
+        holder.bind(item, onDishClicked, onDeleteClicked);
     }
     
     @Override
@@ -72,15 +65,23 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishViewHolder
         }
 
         void bind(final MenuItem item, final OnItemClickListener<MenuItem> dishListener, final OnItemClickListener<MenuItem> deleteListener) {
+            if (item == null) return;
+
             dishNameButton.setText(item.name);
             dishNameButton.setOnClickListener(v -> {
-                if (dishListener != null) dishListener.onItemClick(item);
+                if (dishListener != null) {
+                    dishListener.onItemClick(item);
+                }
             });
 
+            // This is the core logic for staff modification.
+            // It checks the global state to decide UI visibility and behavior.
             if (App.isStaffLoggedIn()) {
                 deleteButton.setVisibility(View.VISIBLE);
                 deleteButton.setOnClickListener(v -> {
-                    if (deleteListener != null) deleteListener.onItemClick(item);
+                    if (deleteListener != null) {
+                        deleteListener.onItemClick(item);
+                    }
                 });
             } else {
                 deleteButton.setVisibility(View.GONE);

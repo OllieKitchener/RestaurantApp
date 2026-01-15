@@ -20,8 +20,7 @@ public class GuestHomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // CRITICAL FIX: Reset ONLY the menu data, leaving reservations intact.
-        RestaurantRepository.getInstance(getApplicationContext()).resetMenuData();
+        // CRITICAL FIX: The call to resetMenuData() has been ACTUALLY removed.
     }
 
     private void setupButtons() {
