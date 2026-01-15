@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
+import com.yourorg.restaurantapp.ui.staff.StaffManageMenuActivity;
 import com.yourorg.restaurantapp.ui.staff.StaffMenuCategoryActivity; // Correct import
 
 public class StaffHomeActivity extends AppCompatActivity {
@@ -19,25 +20,25 @@ public class StaffHomeActivity extends AppCompatActivity {
 
         if (manageMenuButton != null) {
             manageMenuButton.setOnClickListener(v -> {
-                startActivity(new Intent(this, com.yourorg.restaurantapp.ui.staff.StaffManageMenuActivity.class));
+                startActivity(new Intent(this, StaffManageMenuActivity.class));
             });
         }
 
         if (previewMenuButton != null) {
             previewMenuButton.setOnClickListener(v -> {
-                // Now navigating to the Staff-specific menu preview, keeping staff context
+                // Navigate to the Staff Menu Preview screen
                 startActivity(new Intent(this, StaffMenuCategoryActivity.class));
             });
         }
 
-        // --- Back Button Navigation ---
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 
-        // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> {
-             // Already at Staff Home, maybe refresh or do nothing
+             // CRITICAL FIX: When on Staff Home, pressing Home should do nothing or refresh.
+             // It should NOT reset isStaffLoggedIn to false.
+             // If we were implementing a logout, we'd reset it here.
         });
 
         Button notificationsButton = findViewById(R.id.notificationsButton);

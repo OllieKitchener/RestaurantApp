@@ -16,7 +16,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        // --- Ensure staff status is false on customer login screen ---
+        // --- CRITICAL FIX: Explicitly reset staff status to false on customer login screen ---
         SharedBookingData.isStaffLoggedIn = false;
 
         EditText emailEditText = findViewById(R.id.username);
@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 // --- Login Check using UserSession ---
-                // UserSession now handles case-insensitivity internally, but we pass trimmed input
                 if (UserSession.validateUser(email, password)) {
                     // Login successful - navigate to Guest Home
                     startActivity(new Intent(this, GuestHomeActivity.class));
@@ -50,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (staffLoginLink != null) {
             staffLoginLink.setOnClickListener(v -> {
+                // When navigating to Staff Login, ensure customer context is clear
+                SharedBookingData.isStaffLoggedIn = false; // Explicitly ensure we are not staff when going to staff login
                 startActivity(new Intent(this, StaffLoginActivity.class));
             });
         }

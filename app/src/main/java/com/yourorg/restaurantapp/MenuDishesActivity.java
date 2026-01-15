@@ -5,57 +5,82 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.myapplication.R;
 import com.yourorg.restaurantapp.model.MenuItem;
 import com.yourorg.restaurantapp.viewmodel.MenuViewModel;
+import com.yourorg.restaurantapp.DishAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MenuDishesActivity extends AppCompatActivity {
 
     private String category;
-    private LinearLayout dishesContainer;
     private MenuViewModel menuViewModel;
+    private DishAdapter adapter;
+    private TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_dishes);
 
-        // --- Basic Setup ---
-        category = getIntent().getStringExtra("CATEGORY_NAME");
-        if (category == null) category = "Dishes";
+        // Safely get category from intent
+        if (getIntent() != null) {
+            category = getIntent().getStringExtra("CATEGORY_NAME");
+        }
+        if (category == null) {
+            category = "Dishes"; // Fallback category
+        }
         
         TextView title = findViewById(R.id.dish_list_title);
-        if(title != null) title.setText(category);
+        if(title != null) {
+            title.setText(category);
+        }
 
-        // --- Container Setup ---
-        dishesContainer = findViewById(R.id.dishes_container);
-        
-        if (dishesContainer == null) {
-            finish(); 
+        emptyView = findViewById(R.id.empty_view);
+
+        // Setup RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.dishes_recycler_view);
+        if (recyclerView != null) {
+            adapter = new DishAdapter(this::openDishDetails, this::confirmDelete);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+        } else {
+            // If RecyclerView itself is null, something is fundamentally wrong with the layout.
+            Toast.makeText(this, "Error initializing UI elements (RecyclerView).", Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
 
-        // --- ViewModel Setup ---
+        // Setup ViewModel
         menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
-        menuViewModel.menuLiveData.observe(this, this::displayDishes);
-        menuViewModel.loadMenuFromDatabase();
+        // CRITICAL: Ensure observation is only set up once and robustly.
+        menuViewModel.menuLiveData.observe(this, menuItems -> {
+            // Pass this activity's lifecycle owner to observe, ensures proper cleanup
+            updateDishes(menuItems);
+        });
 
-        // --- Back Button Navigation ---
+        // --- Navigation ---
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
-
-        // --- Bottom Nav Bar Logic ---
+        
         Button homeButton = findViewById(R.id.homeButton);
-        if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
+        if(homeButton != null) homeButton.setOnClickListener(v -> {
+            boolean isStaff = SharedBookingData.isStaffLoggedIn;
+            Intent intent = new Intent(this, isStaff ? StaffHomeActivity.class : GuestHomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
 
         Button notificationsButton = findViewById(R.id.notificationsButton);
         if(notificationsButton != null) notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
@@ -64,83 +89,43 @@ public class MenuDishesActivity extends AppCompatActivity {
         if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 
-    private void displayDishes(List<MenuItem> menuItems) {
-        if (menuItems == null || dishesContainer == null) return;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Ensure menu data is loaded when activity becomes visible
+        if (menuViewModel != null) {
+            menuViewModel.loadMenuFromDatabase();
+        }
+    }
 
-        dishesContainer.removeAllViews();
+    private void updateDishes(List<MenuItem> menuItems) {
+        // Robust null checks
+        if (menuItems == null || adapter == null || emptyView == null) return; 
 
         List<MenuItem> filteredDishes = new ArrayList<>();
         for (MenuItem item : menuItems) {
+            // Additional null check for individual item properties
             if (item != null && item.category != null && item.category.equalsIgnoreCase(category)) {
                 filteredDishes.add(item);
             }
         }
+        
+        // CRITICAL: Always submit a *new* list to ListAdapter to avoid ConcurrentModificationException
+        adapter.submitList(new ArrayList<>(filteredDishes));
 
-        if (filteredDishes.isEmpty()) {
-            TextView emptyView = new TextView(this);
-            emptyView.setText("No dishes in this category yet.");
-            emptyView.setTextSize(18);
-            dishesContainer.addView(emptyView);
-        } else {
-            for (MenuItem item : filteredDishes) {
-                // Horizontal layout for row
-                LinearLayout row = new LinearLayout(this);
-                row.setOrientation(LinearLayout.HORIZONTAL);
-                row.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ));
-                row.setPadding(0, 8, 0, 8);
-
-                // Dish Button (Takes up most space)
-                Button dishButton = new Button(this);
-                dishButton.setText(item.name);
-                dishButton.setTextSize(18f);
-                dishButton.setPadding(16, 40, 16, 40);
-                
-                LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
-                    0, 
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1.0f // Weight 1 to take remaining space
-                );
-                dishButton.setLayoutParams(btnParams);
-                dishButton.setOnClickListener(v -> openDishDetails(item));
-                row.addView(dishButton);
-
-                // Delete Button (Only if Staff)
-                if (SharedBookingData.isStaffLoggedIn) {
-                    Button deleteButton = new Button(this);
-                    deleteButton.setText("Delete");
-                    deleteButton.setBackgroundColor(0xFFFF0000); // Red
-                    deleteButton.setTextColor(0xFFFFFFFF); // White
-                    
-                    LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    deleteParams.setMargins(8, 0, 0, 0);
-                    deleteButton.setLayoutParams(deleteParams);
-                    
-                    deleteButton.setOnClickListener(v -> confirmDelete(item));
-                    row.addView(deleteButton);
-                }
-
-                dishesContainer.addView(row);
-            }
-        }
+        emptyView.setVisibility(filteredDishes.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void confirmDelete(MenuItem item) {
         new AlertDialog.Builder(this)
             .setTitle("Delete Dish")
-            .setMessage("Are you sure you want to delete " + item.name + "?")
+            .setMessage("Are you sure you want to delete '" + item.name + "'?")
             .setPositiveButton("Yes", (dialog, which) -> {
-                // Pass a callback to the ViewModel, which will then refresh the menuLiveData
-                menuViewModel.deleteMenuItem(item, () -> {
-                    Toast.makeText(this, "Deleted " + item.name, Toast.LENGTH_SHORT).show();
-                    // The ViewModel's deleteMenuItem now handles calling loadMenuFromDatabase,
-                    // which will in turn cause displayDishes to be called via the LiveData observation.
-                });
+                if (menuViewModel != null) {
+                    menuViewModel.deleteMenuItem(item, () -> {
+                        // UI will update automatically via LiveData observation upon successful deletion.
+                    });
+                }
             })
             .setNegativeButton("No", null)
             .show();

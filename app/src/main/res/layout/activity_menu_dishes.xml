@@ -7,11 +7,11 @@
     tools:context=".MenuDishesActivity">
 
     <LinearLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_above="@+id/bottomNav">
+        android:padding="16dp">
 
         <Button
             android:id="@+id/backButton"
@@ -24,34 +24,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp"
-            android:text="Category"
+            android:layout_marginBottom="16dp"
             android:textSize="28sp"
-            android:textStyle="bold" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:id="@+id/dishes_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-        </ScrollView>
-
+            android:textStyle="bold"
+            tools:text="Category Dishes" />
     </LinearLayout>
+    
+    <!-- Restored empty view TextView -->
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No dishes in this category yet."
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dishes_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
+        android:layout_above="@+id/bottomNav"
+        android:paddingHorizontal="16dp"
+        tools:listitem="@layout/dish_item" />
 
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:paddingTop="24dp"
-        android:paddingBottom="24dp"
-        android:layout_alignParentBottom="true">
+        android:paddingBottom="24dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
