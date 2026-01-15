@@ -9,12 +9,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.example.myapplication.R;
-import com.yourorg.restaurantapp.StaffHomeActivity;
+import com.yourorg.restaurantapp.GuestHomeActivity;
 import com.yourorg.restaurantapp.NotificationsActivity;
 import com.yourorg.restaurantapp.SettingsActivity;
+import com.yourorg.restaurantapp.StaffHomeActivity;
 import com.yourorg.restaurantapp.data.local.entities.MenuItemEntity;
 import com.yourorg.restaurantapp.viewmodel.MenuViewModel;
 
@@ -58,7 +61,9 @@ public class StaffManageMenuActivity extends AppCompatActivity {
     
     private void setupNavigation() {
         Button backButton = findViewById(R.id.backButton);
-        if(backButton != null) backButton.setOnClickListener(v -> finish());
+        if(backButton != null) {
+            backButton.setOnClickListener(v -> finish());
+        }
 
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> {

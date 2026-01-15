@@ -16,7 +16,6 @@ public class NotificationWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        // Example check: you could read preferences and call API here
         NotificationHelper helper = new NotificationHelper(getApplicationContext());
         helper.showNotification(1001, "Reminder", "You have upcoming reservations");
         return Result.success();

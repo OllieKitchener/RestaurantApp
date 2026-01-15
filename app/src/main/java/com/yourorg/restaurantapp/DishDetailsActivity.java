@@ -29,7 +29,6 @@ public class DishDetailsActivity extends AppCompatActivity {
         MenuItem dish = (MenuItem) getIntent().getSerializableExtra(EXTRA_MENU_ITEM);
 
         if (dish != null) {
-            // Robustly setting text with null checks for all TextViews and data fields
             if (dishNameTitle != null) dishNameTitle.setText(dish.name != null ? dish.name : "N/A");
             if (dishDescription != null) dishDescription.setText(dish.description != null ? dish.description : "No description available.");
             if (dishPrice != null) dishPrice.setText(String.format("$%.2f", dish.price)); // Price should always be a double
@@ -45,7 +44,6 @@ public class DishDetailsActivity extends AppCompatActivity {
             backButton.setOnClickListener(v -> finish());
         }
 
-        // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
 

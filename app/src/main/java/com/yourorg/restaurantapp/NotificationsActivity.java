@@ -26,9 +26,8 @@ public class NotificationsActivity extends AppCompatActivity {
         }
 
         List<String> messagesToDisplay;
-        String homeActivityClass; // To determine where 'Home' button should go
+        String homeActivityClass;
 
-        // CRITICAL FIX: Use global App.isStaffLoggedIn() instead of SharedBookingData
         if (App.isStaffLoggedIn()) {
             messagesToDisplay = SharedBookingData.staffNotificationMessages;
             homeActivityClass = StaffHomeActivity.class.getName();
@@ -43,7 +42,6 @@ public class NotificationsActivity extends AppCompatActivity {
             textView.setTextSize(18);
             notificationsContainer.addView(textView);
         } else {
-            // Display messages in reverse chronological order (most recent first)
             List<String> reversedMessages = new java.util.ArrayList<>(messagesToDisplay);
             Collections.reverse(reversedMessages);
 
@@ -56,11 +54,9 @@ public class NotificationsActivity extends AppCompatActivity {
             }
         }
 
-        // --- Back Button Navigation ---
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 
-        // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, (Class<?>) null);
@@ -69,7 +65,6 @@ public class NotificationsActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             } catch (ClassNotFoundException e) {
-                // Fallback or log error
                 e.printStackTrace();
                 startActivity(new Intent(this, GuestHomeActivity.class)); // Default fallback
             }

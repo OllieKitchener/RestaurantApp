@@ -50,7 +50,6 @@ public class GuestMenuActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         viewModel.loadMenuFromDatabase();
 
-        // --- Bottom Nav Bar Logic (Guest Context) ---
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
 

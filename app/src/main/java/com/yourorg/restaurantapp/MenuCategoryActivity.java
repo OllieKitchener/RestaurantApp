@@ -25,7 +25,6 @@ public class MenuCategoryActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.category_recycler_view);
         if (recyclerView != null) {
-            // Using the onItemClick interface
             adapter = new CategoryAdapter(category -> onCategoryClicked(category));
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);

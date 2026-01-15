@@ -33,25 +33,20 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            // 2. Password length validation
             if (password.length() < 8) {
                 Toast.makeText(this, "Password must be at least 8 characters long.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // 3. Password match validation
             if (!password.equals(confirmPassword)) {
                 Toast.makeText(this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // 4. Attempt to register user
-            // Note: UserSession handles lowercasing, but we assume it here too for consistency
             boolean isSuccess = UserSession.registerUser(email, password);
             
             if (isSuccess) {
-                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show(); // Kept short toast for feedback
-                // Go back to Login screen
+                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
                 Toast.makeText(this, "This email is already registered.", Toast.LENGTH_SHORT).show();
@@ -59,7 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         loginLink.setOnClickListener(v -> {
-            // Go back to Login screen
             finish();
         });
     }

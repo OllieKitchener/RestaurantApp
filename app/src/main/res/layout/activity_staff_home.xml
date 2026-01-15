@@ -7,46 +7,52 @@
     tools:context=".StaffHomeActivity">
 
     <LinearLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="16dp"
-        android:layout_above="@+id/bottomNav">
+        android:padding="16dp">
 
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Back" />
+        <!-- Back Button Removed -->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Staff Dashboard"
-            android:textSize="34sp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="48dp"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="48dp"
+            android:text="Staff Management"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-        <!-- Made button bigger with padding and text size -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_bar"
+        android:layout_above="@+id/bottomNav"
+        android:orientation="vertical"
+        android:paddingHorizontal="32dp" 
+        android:gravity="center">
+
         <Button
             android:id="@+id/manageMenuButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:textSize="18sp"
-            android:text="Manage Menu" />
+            android:layout_width="280dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="Manage Menu"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"/>
 
-        <!-- Made button bigger with padding and text size -->
         <Button
             android:id="@+id/previewMenuButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:padding="16dp"
-            android:textSize="18sp"
-            android:text="Preview Menu (As Customer)"
-            app:backgroundTint="@android:color/holo_blue_dark" />
+            android:layout_width="280dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="Preview Menu"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
 
@@ -56,8 +62,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
@@ -67,19 +73,17 @@
             android:layout_weight="1"
             android:text="Home"
             android:textSize="13sp"
-            app:icon="@drawable/ic_home"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_home" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
             android:textSize="13sp"
-            app:icon="@drawable/ic_notifications"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_notifications" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
@@ -89,8 +93,7 @@
             android:layout_weight="1"
             android:text="Settings"
             android:textSize="13sp"
-            app:icon="@drawable/ic_settings"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_settings" />
     </LinearLayout>
 
 </RelativeLayout>

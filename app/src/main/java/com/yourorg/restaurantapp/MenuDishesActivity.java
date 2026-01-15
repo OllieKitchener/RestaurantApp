@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,8 @@ public class MenuDishesActivity extends AppCompatActivity {
     private MenuViewModel menuViewModel;
     private DishAdapter adapter;
     private TextView emptyView;
+    private RecyclerView recyclerView;
+    private Observer<List<MenuItem>> menuObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +41,32 @@ public class MenuDishesActivity extends AppCompatActivity {
         title.setText(category);
 
         emptyView = findViewById(R.id.empty_view);
+        recyclerView = findViewById(R.id.dishes_recycler_view);
 
-        RecyclerView recyclerView = findViewById(R.id.dishes_recycler_view);
         adapter = new DishAdapter(this::openDishDetails, this::confirmDelete);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
         menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
-        menuViewModel.menuLiveData.observe(this, this::updateDishes);
+
+        menuObserver = menuItems -> {
+            List<MenuItem> filtered = new ArrayList<>();
+            if (menuItems != null) {
+                for (MenuItem item : menuItems) {
+                    if (item != null && item.category != null && category.equalsIgnoreCase(item.category)) {
+                        filtered.add(item);
+                    }
+                }
+            }
+            adapter.setDishes(filtered);
+            if (emptyView != null) {
+                emptyView.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
+            }
+        };
+
+        menuViewModel.menuLiveData.observe(this, menuObserver);
+        
+        menuViewModel.loadMenuFromDatabase();
 
         setupNavigation();
     }
@@ -53,9 +74,6 @@ public class MenuDishesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Refresh data every time the screen is shown.
-        // This is important so the list updates after an item is added or deleted.
-        menuViewModel.loadMenuFromDatabase();
     }
     
     private void setupNavigation() {
@@ -69,30 +87,25 @@ public class MenuDishesActivity extends AppCompatActivity {
         findViewById(R.id.settingsButton).setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 
-    private void updateDishes(List<MenuItem> menuItems) {
-        List<MenuItem> filtered = new ArrayList<>();
-        if (menuItems != null) {
-            for (MenuItem item : menuItems) {
-                if (item != null && item.category != null && category.equalsIgnoreCase(item.category)) {
-                    filtered.add(item);
-                }
-            }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (menuViewModel != null && menuObserver != null) {
+            menuViewModel.menuLiveData.removeObserver(menuObserver);
         }
-        
-        adapter.setDishes(filtered);
-        emptyView.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
+        if (recyclerView != null) {
+            recyclerView.setAdapter(null);
+        }
+        if (adapter != null) {
+            adapter.clear();
+        }
     }
 
-    // This method is passed to the adapter to handle delete clicks.
     private void confirmDelete(MenuItem item) {
         new AlertDialog.Builder(this)
             .setTitle("Delete Dish")
             .setMessage("Are you sure you want to delete '" + item.name + "'?")
-            .setPositiveButton("Yes", (dialog, which) -> {
-                // On confirmation, call the ViewModel to delete the item.
-                // LiveData will automatically trigger updateDishes to refresh the list.
-                menuViewModel.deleteMenuItem(item, null);
-            })
+            .setPositiveButton("Yes", (dialog, which) -> menuViewModel.deleteMenuItem(item, null))
             .setNegativeButton("No", null)
             .show();
     }

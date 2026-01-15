@@ -13,15 +13,13 @@ public class ReservationEntity {
     public String dateTime;
     public String status;
 
-    // A single constructor for creating a new reservation from the UI
     public ReservationEntity(String name, int partySize, String dateTime) {
         this.name = name;
         this.partySize = partySize;
         this.dateTime = dateTime;
-        this.status = "Booked"; // Default status
+        this.status = "Booked";
     }
 
-    // Corrected to call the constructor that ACTUALLY exists on the Reservation model
     public com.yourorg.restaurantapp.model.Reservation toModel() {
         return new com.yourorg.restaurantapp.model.Reservation(id, name, partySize, dateTime, status);
     }

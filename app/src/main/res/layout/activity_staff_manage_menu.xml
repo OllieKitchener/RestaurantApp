@@ -7,92 +7,107 @@
     tools:context=".ui.staff.StaffManageMenuActivity">
 
     <LinearLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_above="@+id/bottomNav">
+        android:padding="16dp">
 
-        <EditText
-            android:id="@+id/et_name"
-            android:layout_width="match_parent"
+        <!-- Back Button Added Here -->
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Item Name" />
-
-        <EditText
-            android:id="@+id/et_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Description" />
-
-        <EditText
-            android:id="@+id/et_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Price"
-            android:inputType="numberDecimal" />
+            android:text="Back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Category:"
-            android:textStyle="bold"/>
-
-        <Spinner
-            android:id="@+id/spinner_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:minHeight="48dp" />
-
-        <EditText
-            android:id="@+id/et_ingredients"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Ingredients (comma separated)" />
-
-        <EditText
-            android:id="@+id/et_allergy_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Allergy Information (e.g. Gluten, Dairy)" />
-
-        <Button
-            android:id="@+id/btn_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Add New Menu Item" />
-
-        <Button
-            android:id="@+id/btn_clear_all"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Clear All Dishes (WARNING)" />
-
-        <Button
-            android:id="@+id/btn_add_sample_dishes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Add Sample Dishes" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:visibility="gone" />
-
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            android:text="Manage Menu"
+            android:textSize="28sp"
+            android:textStyle="bold" />
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_bar"
+        android:layout_above="@+id/bottomNav">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Dish Name" />
+
+            <EditText
+                android:id="@+id/et_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description" />
+
+            <EditText
+                android:id="@+id/et_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Price"
+                android:inputType="numberDecimal" />
+
+            <Spinner
+                android:id="@+id/spinner_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp" />
+
+            <EditText
+                android:id="@+id/et_ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingredients" />
+
+            <EditText
+                android:id="@+id/et_allergy_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Allergy Info" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Item" />
+
+            <Button
+                android:id="@+id/btn_clear_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Clear All Items" />
+                
+            <Button
+                android:id="@+id/btn_add_sample_dishes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Sample Dishes" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/bottomNav"
@@ -100,8 +115,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
@@ -111,19 +126,17 @@
             android:layout_weight="1"
             android:text="Home"
             android:textSize="13sp"
-            app:icon="@drawable/ic_home"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_home" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
             android:textSize="13sp"
-            app:icon="@drawable/ic_notifications"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_notifications" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
@@ -133,8 +146,7 @@
             android:layout_weight="1"
             android:text="Settings"
             android:textSize="13sp"
-            app:icon="@drawable/ic_settings"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_settings" />
     </LinearLayout>
 
 </RelativeLayout>

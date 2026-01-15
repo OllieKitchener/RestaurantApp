@@ -35,21 +35,18 @@ public class BookInSummaryActivity extends AppCompatActivity {
             return;
         }
 
-        // Retrieve individual booking details
         bookingName = getIntent().getStringExtra("name");
         bookingPartySizeStr = getIntent().getStringExtra("partySize");
         bookingDate = getIntent().getStringExtra("date");
         bookingTime = getIntent().getStringExtra("time");
         bookingDateTime = bookingDate + " at " + bookingTime;
 
-        // Convert party size string to int
         try {
             bookingPartySize = Integer.parseInt(bookingPartySizeStr);
         } catch (NumberFormatException e) {
-            bookingPartySize = 1; // Default to 1 if parsing fails
+            bookingPartySize = 1;
         }
 
-        // Construct summary string here
         String summary = "Name: " + bookingName + "\n" +
                          "Party Size: " + bookingPartySizeStr + "\n" +
                          "Date: " + bookingDate + "\n" +
@@ -59,21 +56,18 @@ public class BookInSummaryActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
 
         confirmButton.setOnClickListener(v -> {
-            // Save the reservation to the shared Singleton Repository via ViewModel
             ReservationEntity newReservation = new ReservationEntity(bookingName, bookingPartySize, bookingDateTime);
             reservationViewModel.createReservationLocal(newReservation);
 
             NotificationHelper notificationHelper = new NotificationHelper(this);
             notificationHelper.showNotification(1, "Booking Confirmed!", "Your booking details are in the app.");
 
-            // --- CRITICAL FIX: Send notifications to both customer and staff lists ---
             String customerNotificationMessage = "Booking Confirmed!\n" + summary;
             SharedBookingData.customerNotificationMessages.add(customerNotificationMessage);
 
             String staffNotificationMessage = "NEW BOOKING!\nName: " + bookingName + ", Party: " + bookingPartySize + ", Time: " + bookingDateTime;
             SharedBookingData.staffNotificationMessages.add(staffNotificationMessage);
 
-            // Navigate back to Home
             Intent homeIntent = new Intent(BookInSummaryActivity.this, GuestHomeActivity.class);
             homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(homeIntent);

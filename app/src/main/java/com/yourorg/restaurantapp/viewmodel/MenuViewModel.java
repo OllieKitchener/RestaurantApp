@@ -47,9 +47,7 @@ public class MenuViewModel extends AndroidViewModel {
             }
         });
     }
-
-    // RESTORED: This method was accidentally removed.
-    public void populateDefaultDishes(Runnable onComplete) {
+        public void populateDefaultDishes(Runnable onComplete) {
         repository.insertMenuItemLocal(new MenuItemEntity("Sample Dish 1", "Desc 1", 10.99, "Deals", true, "", ""), null);
         repository.insertMenuItemLocal(new MenuItemEntity("Sample Dish 2", "Desc 2", 12.99, "Meat", true, "", ""), () -> {
             if (isCleared) return;

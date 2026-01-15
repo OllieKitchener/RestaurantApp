@@ -9,8 +9,6 @@ public class Reservation {
     @SerializedName("name")
     public String name;
 
-    // Removed phone and notes to match the simplified entity
-
     @SerializedName("partySize")
     public int partySize;
 
@@ -22,7 +20,6 @@ public class Reservation {
 
     public Reservation() { }
 
-    // Updated constructor
     public Reservation(int id, String name, int partySize, String dateTime, String status) {
         this.id = id;
         this.name = name;

@@ -16,7 +16,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        // CRITICAL FIX: Explicitly reset staff status to false via global App state
         App.setStaffLoggedIn(false);
 
         EditText emailEditText = findViewById(R.id.username);
@@ -51,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
 
         if (staffLoginLink != null) {
             staffLoginLink.setOnClickListener(v -> {
-                // When navigating to Staff Login, explicitly ensure staff status is false before opening staff login screen
                 App.setStaffLoggedIn(false);
                 startActivity(new Intent(this, StaffLoginActivity.class));
             });

@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- CRITICAL FIX: Using fully qualified name for App class, and removed 'package' attribute from manifest tag -->
     <application
         android:name="com.yourorg.restaurantapp.App"
         android:allowBackup="true"

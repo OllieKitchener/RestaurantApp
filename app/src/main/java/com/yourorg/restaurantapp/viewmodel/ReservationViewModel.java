@@ -50,8 +50,7 @@ public class ReservationViewModel extends AndroidViewModel {
             reservationsLiveData.postValue(reservations);
         });
     }
-    
-    // Remote method kept for compile-time safety
+
     public void createReservationRemote(Reservation reservation, Callback<Reservation> callback) {
         repository.createReservationRemote(reservation, callback);
     }

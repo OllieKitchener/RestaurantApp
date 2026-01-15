@@ -74,8 +74,6 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishViewHolder
                 }
             });
 
-            // This is the core logic for staff modification.
-            // It checks the global state to decide UI visibility and behavior.
             if (App.isStaffLoggedIn()) {
                 deleteButton.setVisibility(View.VISIBLE);
                 deleteButton.setOnClickListener(v -> {

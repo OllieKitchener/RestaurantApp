@@ -23,23 +23,19 @@ public class ReservationsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reservations1);
+        setContentView(R.layout.reservations);
 
         reservationsContainer = findViewById(R.id.reservationsContainer);
-        
-        // Initialize ViewModel. Because we use the Singleton Repository, this should access the same data.
+
         reservationViewModel = new ViewModelProvider(this).get(ReservationViewModel.class);
 
-        // Observer for reservations LiveData
         reservationViewModel.reservationsLiveData.observe(this, this::displayReservations);
 
-        // --- Back Button Navigation ---
         Button backButton = findViewById(R.id.backButton);
         if (backButton != null) {
             backButton.setOnClickListener(v -> finish());
         }
 
-        // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> startActivity(new Intent(this, GuestHomeActivity.class)));
 
@@ -53,7 +49,6 @@ public class ReservationsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // CRITICAL: Refresh data from the repository every time this screen appears
         reservationViewModel.loadReservationsFromDatabase();
     }
 
@@ -67,7 +62,6 @@ public class ReservationsActivity extends AppCompatActivity {
             textView.setTextSize(18);
             reservationsContainer.addView(textView);
         } else {
-            // Create a copy to reverse, avoiding modification of the original list if it's from the repo
             List<Reservation> reversedList = new java.util.ArrayList<>(reservations);
             Collections.reverse(reversedList);
             
@@ -78,7 +72,7 @@ public class ReservationsActivity extends AppCompatActivity {
                 TextView textView = new TextView(this);
                 textView.setText(summary);
                 textView.setTextSize(18);
-                textView.setPadding(0, 8, 0, 24); // Added bottom padding for better spacing
+                textView.setPadding(0, 8, 0, 24);
                 reservationsContainer.addView(textView);
             }
         }

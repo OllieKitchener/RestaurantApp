@@ -20,7 +20,7 @@ public class GuestHomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // CRITICAL FIX: The call to resetMenuData() has been ACTUALLY removed.
+        RestaurantRepository.getInstance(getApplicationContext()).resetMenuData();
     }
 
     private void setupButtons() {
@@ -40,7 +40,6 @@ public class GuestHomeActivity extends AppCompatActivity {
             myReservationsButton.setOnClickListener(v -> startActivity(new Intent(this, ReservationsActivity.class)));
         }
 
-        // --- Bottom Nav Bar Logic ---
         Button homeButton = findViewById(R.id.homeButton);
         if(homeButton != null) homeButton.setOnClickListener(v -> recreate());
 

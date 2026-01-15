@@ -65,13 +65,12 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
-            android:textSize="10sp"
-            app:icon="@drawable/ic_notifications"
-            app:iconPadding="4dp" />
+            android:textSize="13sp"
+            app:icon="@drawable/ic_notifications" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"

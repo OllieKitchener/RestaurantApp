@@ -29,7 +29,6 @@ public class BookInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_in);
 
-        // --- View Initialization (with null checks) ---
         TextInputEditText nameEditText = findViewById(R.id.nameEditText);
         TextInputEditText partySizeEditText = findViewById(R.id.partySizeEditText);
         dateEditText = findViewById(R.id.dateEditText);
@@ -72,7 +71,6 @@ public class BookInActivity extends AppCompatActivity {
                 return;
             }
 
-            // --- Date and Time Validation ---
             SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US);
             Date selectedDateTime = null;
             try {
@@ -82,26 +80,22 @@ public class BookInActivity extends AppCompatActivity {
                 return;
             }
 
-            // 1. Future Date Validation
             if (selectedDateTime != null && selectedDateTime.before(Calendar.getInstance().getTime())) {
                 Toast.makeText(this, "Booking must be for a future date and time", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // 2. Time Range Validation (12:00 PM to 8:59 PM)
             Calendar selectedCalendar = Calendar.getInstance();
             if (selectedDateTime != null) {
                 selectedCalendar.setTime(selectedDateTime);
             }
             int hourOfDay = selectedCalendar.get(Calendar.HOUR_OF_DAY);
 
-            // CRITICAL FIX: Change > 21 to >= 21 to exclude 9:00 PM (hour 21) and later
-            if (hourOfDay < 12 || hourOfDay >= 21) { // 21 is 9 PM, so >= 21 means 9 PM onwards is invalid
+            if (hourOfDay < 12 || hourOfDay >= 21) {
                 Toast.makeText(this, "Bookings can only be made between 12:00 PM and 8:59 PM", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            // All validations passed, proceed to summary
             Intent intent = new Intent(BookInActivity.this, BookInSummaryActivity.class);
             intent.putExtra("name", name);
             intent.putExtra("partySize", partySizeStr);

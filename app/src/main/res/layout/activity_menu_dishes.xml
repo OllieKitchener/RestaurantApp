@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,12 +25,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
+            android:text="Menu Categories"
             android:textSize="28sp"
             android:textStyle="bold"
             tools:text="Category Dishes" />
     </LinearLayout>
     
-    <!-- Restored empty view TextView -->
     <TextView
         android:id="@+id/empty_view"
         android:layout_width="wrap_content"
@@ -55,8 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/homeButton"
@@ -66,19 +66,17 @@
             android:layout_weight="1"
             android:text="Home"
             android:textSize="13sp"
-            app:icon="@drawable/ic_home"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_home" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationsButton"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
             android:textSize="13sp"
-            app:icon="@drawable/ic_notifications"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_notifications" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settingsButton"
@@ -88,8 +86,7 @@
             android:layout_weight="1"
             android:text="Settings"
             android:textSize="13sp"
-            app:icon="@drawable/ic_settings"
-            app:iconPadding="1dp" />
+            app:icon="@drawable/ic_settings" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -4,7 +4,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import com.yourorg.restaurantapp.model.MenuItem;
 
-// Annotation kept to minimize code changes, even though we are in-memory now
 @Entity(tableName = "menu_items")
 public class MenuItemEntity {
     @PrimaryKey(autoGenerate = true)
@@ -20,7 +19,6 @@ public class MenuItemEntity {
 
     public MenuItemEntity() { }
 
-    // Full constructor including ID
     public MenuItemEntity(int id, String name, String description, double price, String category, boolean available, String ingredients, String allergyInfo) {
         this.id = id;
         this.name = name;
@@ -32,7 +30,6 @@ public class MenuItemEntity {
         this.allergyInfo = allergyInfo;
     }
 
-    // Constructor without ID
     public MenuItemEntity(String name, String description, double price, String category, boolean available, String ingredients, String allergyInfo) {
         this.name = name;
         this.description = description;
@@ -43,7 +40,6 @@ public class MenuItemEntity {
         this.allergyInfo = allergyInfo;
     }
 
-    // Restored helper method to convert Model -> Entity
     public static MenuItemEntity fromModel(MenuItem m) {
         return new MenuItemEntity(m.id, m.name, m.description, m.price, m.category, m.available, m.ingredients, m.allergyInfo);
     }

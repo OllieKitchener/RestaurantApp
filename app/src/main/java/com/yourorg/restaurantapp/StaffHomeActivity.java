@@ -22,7 +22,7 @@ public class StaffHomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // CRITICAL FIX: The call to resetMenuData() has been ACTUALLY removed.
+
     }
 
     private void setupButtons() {
@@ -37,7 +37,6 @@ public class StaffHomeActivity extends AppCompatActivity {
             previewMenuButton.setOnClickListener(v -> startActivity(new Intent(this, StaffMenuCategoryActivity.class)));
         }
 
-        // --- Bottom Nav Bar Logic ---
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 
