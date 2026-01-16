@@ -17,12 +17,12 @@ public class StaffHomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_staff_home);
 
         setupButtons();
+        setupBottomNavBar();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     private void setupButtons() {
@@ -36,7 +36,9 @@ public class StaffHomeActivity extends AppCompatActivity {
         if (previewMenuButton != null) {
             previewMenuButton.setOnClickListener(v -> startActivity(new Intent(this, StaffMenuCategoryActivity.class)));
         }
-
+    }
+    
+    private void setupBottomNavBar() {
         Button backButton = findViewById(R.id.backButton);
         if(backButton != null) backButton.setOnClickListener(v -> finish());
 
@@ -47,6 +49,8 @@ public class StaffHomeActivity extends AppCompatActivity {
         if(notificationsButton != null) notificationsButton.setOnClickListener(v -> startActivity(new Intent(this, NotificationsActivity.class)));
 
         Button settingsButton = findViewById(R.id.settingsButton);
-        if(settingsButton != null) settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
+        if(settingsButton != null) {
+            settingsButton.setOnClickListener(v -> startActivity(new Intent(this, StaffSettingsActivity.class)));
+        }
     }
 }

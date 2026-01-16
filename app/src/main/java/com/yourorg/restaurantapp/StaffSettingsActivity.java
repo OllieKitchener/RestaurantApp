@@ -3,15 +3,16 @@ package com.yourorg.restaurantapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
 
-public class SettingsActivity extends AppCompatActivity {
+public class StaffSettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_staff_settings);
 
         setupNavigation();
     }
@@ -25,7 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
         Button homeButton = findViewById(R.id.homeButton);
         if (homeButton != null) {
             homeButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, GuestHomeActivity.class);
+                Intent intent = new Intent(this, StaffHomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             });
@@ -38,19 +39,17 @@ public class SettingsActivity extends AppCompatActivity {
 
         Button settingsButton = findViewById(R.id.settingsButton);
         if (settingsButton != null) {
-            settingsButton.setOnClickListener(v -> recreate());
+            settingsButton.setOnClickListener(v -> recreate()); 
         }
-
+        
         Button logoutButton = findViewById(R.id.logoutButton);
         if (logoutButton != null) {
             logoutButton.setOnClickListener(v -> {
-                // Log out the user by clearing the staff status
                 App.setStaffLoggedIn(false);
-                // Navigate to the login screen and clear the activity stack
                 Intent intent = new Intent(this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                finish(); // Finish the current activity
+                finish();
             });
         }
     }
